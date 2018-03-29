@@ -24,6 +24,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        src/main.cpp
+        src/main.cpp \
+    src/phasetrajectory.cpp
 
-HEADERS +=
+HEADERS += \
+    src/phasetrajectory.hpp
