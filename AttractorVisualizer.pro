@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core opengl gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,8 +24,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        src/main.cpp \
-    src/phasetrajectory.cpp
+    src/main.cpp \
+    src/ptraj.cpp
 
 HEADERS += \
-    src/phasetrajectory.hpp
+    src/ptraj.hpp
+
+LIBS += -lopengl32

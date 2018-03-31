@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QFile>
 
 int main(int argc, char *argv[])
 {

@@ -1,19 +1,23 @@
-#include "phasetrajectory.hpp"
+#include "ptraj.hpp"
 
-PhaseTrajectory::PhaseTrajectory(QFile *file)
+PTraj::PTraj(QFile *file, int timeStep)
+    : TIME_STEP(timeStep)
 {
+    if (!file->exists()) {
+        qDebug() << "Cannot find " << file->fileName();
+    }
+
     if (file->open(QIODevice::ReadOnly)) {
         QTextStream stream(file);
 
+        /* Load tracjectory data from file */
         QString line;
         QStringList values;
         State state;
         while (!stream.atEnd()) {
-            /* Get numbers from line */
             line = stream.readLine();
             values = line.split(',');
 
-            /* Convert to state */
             state = {values.at(0).toDouble(),
                      values.at(1).toDouble(),
                      values.at(2).toDouble()};
@@ -21,8 +25,12 @@ PhaseTrajectory::PhaseTrajectory(QFile *file)
             m_states.push_back(state);
         }
 
+        /* Stream debug info */
         if (stream.status() == QTextStream::Ok) {
             qDebug() << "The trajectory was successfully loaded from " << file->fileName();
+        }
+        else {
+            qDebug() << "The tracjection was not loaded from" << file->fileName();
         }
 
         file->close();
@@ -32,22 +40,27 @@ PhaseTrajectory::PhaseTrajectory(QFile *file)
     }
 }
 
-const State &PhaseTrajectory::at(int pos) const
+const State &PTraj::at(int pos) const
 {
-    return m_states.at(pos);
+    return m_states[pos];
 }
 
-const State &PhaseTrajectory::atTime(double time) const
+const State &PTraj::atTime(double time) const
 {
     return at(timeToPos(time));
 }
 
-QList<State>::const_iterator PhaseTrajectory::getIterator() const
+QList<State>::const_iterator PTraj::getBeginIterator() const
 {
     return m_states.constBegin();
 }
 
-int PhaseTrajectory::timeToPos(double time) const
+QList<State>::const_iterator PTraj::getEndIterator() const
+{
+    return m_states.constEnd();
+}
+
+int PTraj::timeToPos(double time) const
 {
     return time / TIME_STEP;
 }

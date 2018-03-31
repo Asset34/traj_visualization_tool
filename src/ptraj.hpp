@@ -1,10 +1,10 @@
-#ifndef PHASETRAJECTORY_HPP
-#define PHASETRAJECTORY_HPP
+#ifndef PTRAJ_HPP
+#define PTRAJ_HPP
 
 #include <QList>
+#include <QString>
 #include <QTextStream>
 #include <QStringList>
-#include <QString>
 
 #include <QDebug>
 
@@ -15,22 +15,22 @@ struct State
     double x3;
 };
 
-class PhaseTrajectory
+class PTraj
 {
 public:
-    explicit PhaseTrajectory(QFile *file);
+    explicit PTraj(QFile *file, int timeStep);
 
     const State &at(int pos) const;
     const State &atTime(double time) const;
 
-    QList<State>::const_iterator getIterator() const;
+    QList<State>::const_iterator getBeginIterator() const;
+    QList<State>::const_iterator getEndIterator() const;
 
 private:
     int timeToPos(double time) const;
 
     QList<State> m_states;
-
-    const double TIME_STEP = 0.01;
+    const double TIME_STEP;
 };
 
-#endif // PHASETRAJECTORY_HPP
+#endif // PTRAJ_HPP
