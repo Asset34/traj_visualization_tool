@@ -25,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/ptraj.cpp
+    src/ptraj.cpp \
+    src/fileutills.cpp
 
 HEADERS += \
-    src/ptraj.hpp
+    src/ptraj.hpp \
+    src/fileutills.hpp
 
 LIBS += -lopengl32

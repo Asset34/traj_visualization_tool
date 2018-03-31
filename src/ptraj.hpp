@@ -15,22 +15,30 @@ struct State
     double x3;
 };
 
+struct PMetaTraj
+{
+    QString dataPath;
+    int timeStep;
+};
+
 class PTraj
 {
 public:
-    explicit PTraj(QFile *file, int timeStep);
+    explicit PTraj(int timeStep);
 
     const State &at(int pos) const;
     const State &atTime(double time) const;
+    void add(const State &state);
 
     QList<State>::const_iterator getBeginIterator() const;
     QList<State>::const_iterator getEndIterator() const;
 
 private:
-    int timeToPos(double time) const;
+    const double TIME_STEP;
 
     QList<State> m_states;
-    const double TIME_STEP;
+
+    int timeToPos(double time) const;
 };
 
 #endif // PTRAJ_HPP
