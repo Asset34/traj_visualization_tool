@@ -26,10 +26,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     src/main.cpp \
     src/ptraj.cpp \
-    src/fileutills.cpp
+    src/fileutills.cpp \
+    src/mainwindow.cpp \
+    src/oglattractor.cpp
 
 HEADERS += \
     src/ptraj.hpp \
-    src/fileutills.hpp
+    src/fileutills.hpp \
+    src/mainwindow.hpp \
+    src/oglattractor.hpp
 
 LIBS += -lopengl32
