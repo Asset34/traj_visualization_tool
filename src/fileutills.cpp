@@ -1,11 +1,11 @@
 #include "fileutills.hpp"
 
-PMetaTraj FileUtills::readMetaTrajData(const QString &path)
+PTrajMeta FileUtills::readTrajMetaData(const QString &path)
 {
     // TODO
 }
 
-PTraj FileUtills::readTrajData(const PMetaTraj &meta)
+PTraj FileUtills::readTrajData(const PTrajMeta &meta)
 {
     QFile file(meta.dataPath);
 

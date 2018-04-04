@@ -7,8 +7,8 @@
 
 namespace FileUtills {
 
-PMetaTraj readMetaTrajData(const QString &path);
-PTraj readTrajData(const PMetaTraj &meta);
+PTrajMeta readTrajMetaData(const QString &path);
+PTraj readTrajData(const PTrajMeta &meta);
 
 } // FileUtills
 
