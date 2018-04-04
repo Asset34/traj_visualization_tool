@@ -15,7 +15,7 @@ struct State
     double x3;
 };
 
-struct PMetaTraj
+struct PTrajMeta
 {
     QString dataPath;
     int timeStep;
@@ -30,8 +30,9 @@ public:
     const State &atTime(double time) const;
     void add(const State &state);
 
-    QList<State>::const_iterator getBeginIterator() const;
-    QList<State>::const_iterator getEndIterator() const;
+    QList<State>::const_iterator getBIterator() const;
+    QList<State>::const_iterator getEIterator() const;
+    QList<State>::const_iterator getIterator(double time) const;
 
 private:
     const double TIME_STEP;

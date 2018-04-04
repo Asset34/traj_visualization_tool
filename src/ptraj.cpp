@@ -20,14 +20,20 @@ void PTraj::add(const State &state)
     m_states.push_back(state);
 }
 
-QList<State>::const_iterator PTraj::getBeginIterator() const
+QList<State>::const_iterator PTraj::getBIterator() const
 {
     return m_states.constBegin();
 }
 
-QList<State>::const_iterator PTraj::getEndIterator() const
+QList<State>::const_iterator PTraj::getEIterator() const
 {
     return m_states.constEnd();
+}
+
+QList<State>::const_iterator PTraj::getIterator(double time) const
+{
+    // Need to test it
+    return m_states.constBegin() + timeToPos(time);
 }
 
 int PTraj::timeToPos(double time) const
