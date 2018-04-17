@@ -25,15 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/ptraj.cpp \
     src/fileutills.cpp \
-    src/mainwindow.cpp \
-    src/oglattractor.cpp
+    src/Opengl/ptraj.cpp \
+    src/Opengl/oglattractor.cpp \
+    src/GUI/mainwindow.cpp \
+    src/GUI/addtrajwindow.cpp
 
 HEADERS += \
-    src/ptraj.hpp \
     src/fileutills.hpp \
-    src/mainwindow.hpp \
-    src/oglattractor.hpp
+    src/Opengl/ptraj.hpp \
+    src/Opengl/oglattractor.hpp \
+    src/GUI/mainwindow.hpp \
+    src/GUI/addtrajwindow.hpp
 
-LIBS += -lopengl32
+DISTFILES += \
+    src/Opengl/Shaders/fragment_shader.glsl \
+    src/Opengl/Shaders/vertex_shader.glsl
+
+RESOURCES += \
+    shaders.qrc
