@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+	<file alias="vshader.glsl">src/Opengl/Shaders/vertex_shader.glsl</file>
+	<file alias="fshader.glsl">src/Opengl/Shaders/fragment_shader.glsl</file>
+</qresource>
+</RCC>
