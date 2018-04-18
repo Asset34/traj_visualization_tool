@@ -7,12 +7,14 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
 
+#include <QPoint>
 #include <QMatrix4x4>
 
 #include <QMouseEvent>
-#include <QPoint>
 
 #include <QDebug>
+
+#include "camera.hpp"
 
 /*
  * TODO: Store trajectories as smart pointers
@@ -40,11 +42,22 @@ protected:
     virtual void wheelEvent(QWheelEvent *event);
 
 private:
+    constexpr static const GLfloat XRANGLE_OFFSET = 180.0;
+    constexpr static const GLfloat YRANGLE_OFFSET = 180.0;
+    constexpr static const float YFOV             =  45.0;
+    constexpr static const float ZNEAR            =  0.01;
+    constexpr static const float ZFAR             = 100.0;
+
+    Camera m_camera;
+    QPoint m_mousePos;
+
     /* matrixes */
     QMatrix4x4 m_model;
+    QMatrix4x4 m_proj;
 
     /* Locations */
     int m_transformLoc;
+    int m_colorLoc;
 
     /* OpenGL objects */
     QOpenGLBuffer m_vbo;

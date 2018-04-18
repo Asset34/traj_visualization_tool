@@ -29,14 +29,16 @@ SOURCES += \
     src/Opengl/ptraj.cpp \
     src/Opengl/oglattractor.cpp \
     src/GUI/mainwindow.cpp \
-    src/GUI/addtrajwindow.cpp
+    src/GUI/addtrajwindow.cpp \
+    src/Opengl/camera.cpp
 
 HEADERS += \
     src/fileutills.hpp \
     src/Opengl/ptraj.hpp \
     src/Opengl/oglattractor.hpp \
     src/GUI/mainwindow.hpp \
-    src/GUI/addtrajwindow.hpp
+    src/GUI/addtrajwindow.hpp \
+    src/Opengl/camera.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \
