@@ -5,6 +5,10 @@ OGLAttractor::OGLAttractor(QWidget *parent)
       m_shprogram(nullptr),
       vertices(nullptr)
 {
+    /* Set antialiasing and vsync for Opengl */
+    QSurfaceFormat fmt;
+    fmt.setSwapInterval(0);
+    QSurfaceFormat::setDefaultFormat(fmt);
 }
 
 OGLAttractor::~OGLAttractor()
@@ -25,12 +29,6 @@ void OGLAttractor::initializeGL()
 {
     initializeOpenGLFunctions();
     glClearColor(0.0, 0.0, 0.0, 1.0);
-
-//    vertices = new GLfloat[9]{
-//        -0.5f, -0.5f, 0.0f,
-//         0.5f, -0.5f, 0.0f,
-//         0.0f,  0.5f, 0.0f
-//    };
 
     vertices = new GLfloat[108]{
         -0.5f, -0.5f, -0.5f,

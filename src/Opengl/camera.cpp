@@ -18,7 +18,7 @@ void Camera::moveCenter(const QVector3D &center)
 void Camera::rotateYaw(float dangle)
 {
     m_yaw += dangle;
-    normilizeAngle(m_yaw);
+    normilizeYaw();
 
     updateEye();
 }
@@ -26,7 +26,7 @@ void Camera::rotateYaw(float dangle)
 void Camera::rotatePitch(float dangle)
 {
     m_pitch += dangle;
-    normilizeAngle(m_pitch);
+    normilizePitch();
 
     updateEye();
 }
@@ -40,6 +40,7 @@ void Camera::rotate(float dyawAngle, float dyawPitch)
 void Camera::zoomUp()
 {
     m_radius /= KZOOM;
+    normilizeRadius();
 
     updateEye();
 }
@@ -47,6 +48,7 @@ void Camera::zoomUp()
 void Camera::zoomDown()
 {
     m_radius *= KZOOM;
+    normilizeRadius();
 
     updateEye();
 }
@@ -66,12 +68,31 @@ void Camera::updateEye()
     m_eye.setZ(m_radius * qCos(qDegreesToRadians(m_pitch)) * qCos(qDegreesToRadians(m_yaw)));
 }
 
-void Camera::normilizeAngle(float &angle)
+void Camera::normilizeYaw()
 {
-    if (angle < ANGLE_MIN) {
-        angle = ANGLE_MAX;
+    if (m_yaw < YAW_MIN) {
+        m_yaw = YAW_MAX;
     }
-    else if (angle > ANGLE_MAX) {
-        angle = ANGLE_MIN;
+    else if (m_yaw > YAW_MAX){
+        m_yaw = YAW_MIN;
+    }
+}
+
+void Camera::normilizePitch()
+{
+    if (m_pitch < PITCH_MIN) {
+        m_pitch = PITCH_MIN;
+    }
+    else if (m_pitch > PITCH_MAX){
+        m_pitch = PITCH_MAX;
+    }
+}
+void Camera::normilizeRadius()
+{
+    if (m_radius < RADIUS_MIN) {
+        m_radius = RADIUS_MIN;
+    }
+    else if (m_radius > RADIUS_MAX) {
+        m_radius = RADIUS_MAX;
     }
 }

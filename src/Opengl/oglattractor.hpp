@@ -15,6 +15,7 @@
 #include <QDebug>
 
 #include "camera.hpp"
+#include "ptraj.hpp"
 
 /*
  * TODO: Store trajectories as smart pointers
@@ -29,8 +30,9 @@ public:
     explicit OGLAttractor(QWidget *parent = nullptr);
     ~OGLAttractor();
 
-protected:
+    void addTraj(PTraj *ptraj);
 
+protected:
     /* OpenGL events */
     virtual void initializeGL();
     virtual void resizeGL(int w, int h);
@@ -66,6 +68,7 @@ private:
 
     /* Data */
     GLfloat *vertices;
+
 };
 
 #endif // OGLATTRACTOR_HPP

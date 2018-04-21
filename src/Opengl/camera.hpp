@@ -21,9 +21,13 @@ public:
     QMatrix4x4 getViewMatrix() const;
 
 private:
-    constexpr static const float ANGLE_MIN =  0.0;
-    constexpr static const float ANGLE_MAX = 360.0;
-    constexpr static const float KZOOM     =  0.90;
+    constexpr static const float YAW_MIN    =    0.0;
+    constexpr static const float YAW_MAX    =  360.0;
+    constexpr static const float PITCH_MIN  =  -89.9;
+    constexpr static const float PITCH_MAX  =   89.9;
+    constexpr static const float RADIUS_MIN =    1.0;
+    constexpr static const float RADIUS_MAX =  100.0;
+    constexpr static const float KZOOM      =    0.9;
 
     float m_radius;
     float m_yaw;
@@ -35,7 +39,9 @@ private:
 
     void updateEye();
 
-    void normilizeAngle(float &angle);
+    void normilizeYaw();
+    void normilizePitch();
+    void normilizeRadius();
 };
 
 #endif // CAMERA_HPP
