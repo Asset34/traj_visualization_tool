@@ -142,8 +142,8 @@ void OGLAttractor::mousePressEvent(QMouseEvent *event)
 void OGLAttractor::mouseMoveEvent(QMouseEvent *event)
 {
     if (event->buttons().testFlag(Qt::RightButton)) {
-        float dyaw = XRANGLE_OFFSET * float(m_mousePos.x() - event->pos().x()) / width();
-        float dpitch = YRANGLE_OFFSET * float(event->pos().y() - m_mousePos.y()) / height();
+        float dyaw = YAW_SENS * (m_mousePos.x() - event->pos().x());
+        float dpitch = PITCH_SENS * (event->pos().y() - m_mousePos.y());
 
         m_camera.rotate(dyaw, dpitch);
 
@@ -157,10 +157,10 @@ void OGLAttractor::wheelEvent(QWheelEvent *event)
     int numSteps = event->delta();
 
     if (numSteps > 0) {
-        m_camera.zoomDown();
+        m_camera.zoom(ZOOMUP_FACTOR);
     }
     else {
-        m_camera.zoomUp();
+        m_camera.zoom(ZOOMDOWN_FACTOR);
     }
 
     update();

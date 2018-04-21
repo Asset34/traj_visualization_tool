@@ -15,8 +15,7 @@ public:
     void rotateYaw(float dangle);
     void rotatePitch(float dangle);
     void rotate(float dyawAngle, float dyawPitch);
-    void zoomUp();   //zoom-
-    void zoomDown(); //zoom+
+    void zoom(float factor);
 
     QMatrix4x4 getViewMatrix() const;
 

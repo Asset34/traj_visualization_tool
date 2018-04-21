@@ -37,17 +37,9 @@ void Camera::rotate(float dyawAngle, float dyawPitch)
     rotatePitch(dyawPitch);
 }
 
-void Camera::zoomUp()
+void Camera::zoom(float factor)
 {
-    m_radius /= KZOOM;
-    normilizeRadius();
-
-    updateEye();
-}
-
-void Camera::zoomDown()
-{
-    m_radius *= KZOOM;
+    m_radius *= factor;
     normilizeRadius();
 
     updateEye();

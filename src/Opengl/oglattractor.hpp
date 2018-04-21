@@ -44,11 +44,13 @@ protected:
     virtual void wheelEvent(QWheelEvent *event);
 
 private:
-    constexpr static const GLfloat XRANGLE_OFFSET = 180.0;
-    constexpr static const GLfloat YRANGLE_OFFSET = 180.0;
     constexpr static const float YFOV             =  45.0;
     constexpr static const float ZNEAR            =  0.01;
     constexpr static const float ZFAR             = 100.0;
+    constexpr static const float YAW_SENS         =   0.4;
+    constexpr static const float PITCH_SENS       =   0.4;
+    constexpr static const float ZOOMUP_FACTOR    =   0.9;
+    constexpr static const float ZOOMDOWN_FACTOR  =   1.1;
 
     Camera m_camera;
     QPoint m_mousePos;
