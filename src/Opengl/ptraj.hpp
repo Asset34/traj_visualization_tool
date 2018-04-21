@@ -1,38 +1,35 @@
 #ifndef PTRAJ_HPP
 #define PTRAJ_HPP
 
+#include <QVector3D>
 #include <QList>
-#include <QString>
-#include <QTextStream>
-#include <QStringList>
 
-#include <QDebug>
+#include "qopengl.h"
 
-struct State
-{
-    double x1;
-    double x2;
-    double x3;
-};
-
-struct PTrajMeta
-{
-    QString dataPath;
-    int timeStep;
-};
+typedef QVector3D State;
 
 class PTraj
 {
+
 public:
-    const State &at(int pos) const;
+    GLfloat *getOpenglData() const;
+
+    int getDataCount() const;
+    int getDataCount(int time) const;
+    int getVertexCount() const;
+    int getVertexCount(int time) const;
+
+    const State &getInitials() const;
 
     void add(const State &state);
-
-    QList<State>::const_iterator getBIterator() const;
-    QList<State>::const_iterator getEIterator() const;
+    void add(float x, float y, float z);
 
 private:
-    QList<State> m_states;
+    const int N_COORD     =    3;
+    const float TIME_STEP = 0.01;
+
+    QList<State> m_data;
+
 };
 
 #endif // PTRAJ_HPP
