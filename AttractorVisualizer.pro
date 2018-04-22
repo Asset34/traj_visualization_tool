@@ -25,20 +25,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/fileutills.cpp \
     src/Opengl/ptraj.cpp \
     src/Opengl/oglattractor.cpp \
     src/GUI/mainwindow.cpp \
-    src/GUI/addtrajwindow.cpp \
-    src/Opengl/camera.cpp
+    src/Opengl/camera.cpp \
+    src/GUI/Boxes/valueinputbox.cpp \
+    src/GUI/Boxes/doublevalueinputbox.cpp \
+    src/GUI/Boxes/flagsetbox.cpp \
+    src/GUI/Boxes/valueslidebox.cpp \
+    src/GUI/Boxes/doublevalueslidebox.cpp \
+    src/utills.cpp
 
 HEADERS += \
-    src/fileutills.hpp \
     src/Opengl/ptraj.hpp \
     src/Opengl/oglattractor.hpp \
     src/GUI/mainwindow.hpp \
-    src/GUI/addtrajwindow.hpp \
-    src/Opengl/camera.hpp
+    src/Opengl/camera.hpp \
+    src/GUI/Boxes/valueinputbox.hpp \
+    src/GUI/Boxes/doublevalueinputbox.hpp \
+    src/GUI/Boxes/flagsetbox.hpp \
+    src/GUI/Boxes/valueslidebox.hpp \
+    src/GUI/Boxes/doublevalueslidebox.hpp \
+    src/utills.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \
