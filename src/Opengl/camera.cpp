@@ -31,10 +31,10 @@ void Camera::rotatePitch(float dangle)
     updateEye();
 }
 
-void Camera::rotate(float dyawAngle, float dyawPitch)
+void Camera::rotate(float dyawAngle, float dpitchAngle)
 {
     rotateYaw(dyawAngle);
-    rotatePitch(dyawPitch);
+    rotatePitch(dpitchAngle);
 }
 
 void Camera::zoom(float factor)
@@ -62,29 +62,29 @@ void Camera::updateEye()
 
 void Camera::normilizeYaw()
 {
-    if (m_yaw < YAW_MIN) {
-        m_yaw = YAW_MAX;
+    if (m_yaw < CameraConstants::YAW_MIN) {
+        m_yaw = CameraConstants::YAW_MAX;
     }
-    else if (m_yaw > YAW_MAX){
-        m_yaw = YAW_MIN;
+    else if (m_yaw > CameraConstants::YAW_MAX){
+        m_yaw = CameraConstants::YAW_MIN;
     }
 }
 
 void Camera::normilizePitch()
 {
-    if (m_pitch < PITCH_MIN) {
-        m_pitch = PITCH_MIN;
+    if (m_pitch < CameraConstants::PITCH_MIN) {
+        m_pitch = CameraConstants::PITCH_MIN;
     }
-    else if (m_pitch > PITCH_MAX){
-        m_pitch = PITCH_MAX;
+    else if (m_pitch > CameraConstants::PITCH_MAX){
+        m_pitch = CameraConstants::PITCH_MAX;
     }
 }
 void Camera::normilizeRadius()
 {
-    if (m_radius < RADIUS_MIN) {
-        m_radius = RADIUS_MIN;
+    if (m_radius < CameraConstants::RADIUS_MIN) {
+        m_radius = CameraConstants::RADIUS_MIN;
     }
-    else if (m_radius > RADIUS_MAX) {
-        m_radius = RADIUS_MAX;
+    else if (m_radius > CameraConstants::RADIUS_MAX) {
+        m_radius = CameraConstants::RADIUS_MAX;
     }
 }

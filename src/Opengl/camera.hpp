@@ -6,6 +6,23 @@
 
 #include <QtMath>
 
+namespace CameraConstants {
+
+const float CENTERX_MIN = -10000.0;
+const float CENTERX_MAX =  10000.0;
+const float CENTERY_MIN = -10000.0;
+const float CENTERY_MAX =  10000.0;
+const float CENTERZ_MIN = -10000.0;
+const float CENTERZ_MAX =  10000.0;
+const float YAW_MIN     =      0.0;
+const float YAW_MAX     =    360.0;
+const float PITCH_MIN   =    -89.9;
+const float PITCH_MAX   =     89.9;
+const float RADIUS_MIN  =      1.0;
+const float RADIUS_MAX  =    100.0;
+
+} // CameraConstants
+
 class Camera
 {
 public:
@@ -14,20 +31,12 @@ public:
     void moveCenter(const QVector3D &center);   
     void rotateYaw(float dangle);
     void rotatePitch(float dangle);
-    void rotate(float dyawAngle, float dyawPitch);
+    void rotate(float dyawAngle, float dpitchAngle);
     void zoom(float factor);
 
     QMatrix4x4 getViewMatrix() const;
 
 private:
-    constexpr static const float YAW_MIN    =    0.0;
-    constexpr static const float YAW_MAX    =  360.0;
-    constexpr static const float PITCH_MIN  =  -89.9;
-    constexpr static const float PITCH_MAX  =   89.9;
-    constexpr static const float RADIUS_MIN =    1.0;
-    constexpr static const float RADIUS_MAX =  100.0;
-    constexpr static const float KZOOM      =    0.9;
-
     float m_radius;
     float m_yaw;
     float m_pitch;
