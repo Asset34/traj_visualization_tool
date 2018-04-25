@@ -41,16 +41,3 @@ PTraj *Utills::readTrajData(const QString &path)
 
     return nullptr;
 }
-
-int Utills::numDecimals(double value)
-{
-    QString strValue = QString::number(value);
-    int dotPos = strValue.indexOf('.');
-
-    if (dotPos == -1) {
-        return 0;
-    }
-    else {
-        return strValue.count() - dotPos - 1;
-    }
-}

@@ -7,7 +7,7 @@
 #include <QSlider>
 #include <QDoubleSpinBox>
 
-#include <cmath>
+#include <QtMath>
 
 #include "../../utills.hpp"
 
@@ -16,7 +16,9 @@ class DoubleValueSlideBox : public QGroupBox
     Q_OBJECT
 
 public:
-    explicit DoubleValueSlideBox(const QString &name = "", QWidget *parent = nullptr);
+    explicit DoubleValueSlideBox(const QString &name = "",
+                                 int decimals = 2,
+                                 QWidget *parent = nullptr);
 
     QString getName() const;
     void setName(const QString &name);
@@ -25,6 +27,8 @@ public:
     void setMaximum(double max) const;
     double getMinimum() const;
     void setMinimum(double min);
+    int getDecimals() const;
+    void setDecimals(int d);
     double getStep() const;
     void setStep(double step);
 
@@ -35,6 +39,8 @@ private:
     QHBoxLayout *m_mainLayout;
     QDoubleSpinBox *m_valueSpinBox;
     QSlider *m_valueSlider;
+
+    int m_convertFactor;
 
     int convertValue(double value) const;
     double convertValue(int value) const;

@@ -1,6 +1,6 @@
 #include "doublevalueslidebox.hpp"
 
-DoubleValueSlideBox::DoubleValueSlideBox(const QString &name, QWidget *parent)
+DoubleValueSlideBox::DoubleValueSlideBox(const QString &name, int decimals, QWidget *parent)
     : QGroupBox(parent)
 {
     /* Configurate spin box */
@@ -18,9 +18,9 @@ DoubleValueSlideBox::DoubleValueSlideBox(const QString &name, QWidget *parent)
 
     /* Configurate widget */
     setTitle(name);
-
     setLayout(m_mainLayout);
     setFixedHeight(40);
+    setDecimals(decimals);
 
     /* Configurate connections */
     connect(m_valueSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
@@ -53,7 +53,7 @@ double DoubleValueSlideBox::getMaximum() const
 void DoubleValueSlideBox::setMaximum(double max) const
 {
     m_valueSpinBox->setMaximum(max);
-    m_valueSlider->setMaximum(max);
+    m_valueSlider->setMaximum(convertValue(max));
 }
 
 double DoubleValueSlideBox::getMinimum() const
@@ -64,7 +64,18 @@ double DoubleValueSlideBox::getMinimum() const
 void DoubleValueSlideBox::setMinimum(double min)
 {
     m_valueSpinBox->setMinimum(min);
-    m_valueSlider->setMinimum(min);
+    m_valueSlider->setMinimum(convertValue(min));
+}
+
+int DoubleValueSlideBox::getDecimals() const
+{
+    return m_valueSpinBox->decimals();
+}
+
+void DoubleValueSlideBox::setDecimals(int d)
+{
+    m_convertFactor = qPow(10, d);
+    m_valueSpinBox->setDecimals(d);
 }
 
 double DoubleValueSlideBox::getStep() const
@@ -74,7 +85,6 @@ double DoubleValueSlideBox::getStep() const
 
 void DoubleValueSlideBox::setStep(double step)
 {
-    m_valueSpinBox->setDecimals(Utills::numDecimals(step));
     m_valueSpinBox->setSingleStep(step);
     m_valueSlider->setSingleStep(convertValue(step));
 }
@@ -87,16 +97,12 @@ void DoubleValueSlideBox::setValue(double value)
 
 int DoubleValueSlideBox::convertValue(double value) const
 {
-    int numDecimals = m_valueSpinBox->decimals();
-
-    return value * log10(numDecimals);
+    return value * m_convertFactor;
 }
 
 double DoubleValueSlideBox::convertValue(int value) const
 {
-    int numDecimals = m_valueSpinBox->decimals();
-
-    return value / log10(numDecimals);
+    return double(value) / m_convertFactor;
 }
 
 void DoubleValueSlideBox::setSpinBoxValue(int value)

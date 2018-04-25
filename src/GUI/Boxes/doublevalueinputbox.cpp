@@ -1,6 +1,6 @@
 #include "doublevalueinputbox.hpp"
 
-DoubleValueInputBox::DoubleValueInputBox(const QString &name, QWidget *parent)
+DoubleValueInputBox::DoubleValueInputBox(const QString &name, int decimals, QWidget *parent)
     : QWidget(parent)
 {
     /* Configurate label */
@@ -20,6 +20,7 @@ DoubleValueInputBox::DoubleValueInputBox(const QString &name, QWidget *parent)
     /* Configurate widget */
     setLayout(m_mainLayout);
     setFixedHeight(20);
+    m_valueSpinBox->setDecimals(decimals);
 
     /* Configurate connections */
     connect(m_valueSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
@@ -61,6 +62,16 @@ void DoubleValueInputBox::setMinimum(double min)
     m_valueSpinBox->setMinimum(min);
 }
 
+int DoubleValueInputBox::getDecimals() const
+{
+    return m_valueSpinBox->decimals();
+}
+
+void DoubleValueInputBox::setDecimals(int d)
+{
+    m_valueSpinBox->setDecimals(d);
+}
+
 double DoubleValueInputBox::getStep() const
 {
     return m_valueSpinBox->singleStep();
@@ -68,7 +79,6 @@ double DoubleValueInputBox::getStep() const
 
 void DoubleValueInputBox::setStep(double step)
 {
-    m_valueSpinBox->setDecimals(Utills::numDecimals(step));
     m_valueSpinBox->setSingleStep(step);
 }
 

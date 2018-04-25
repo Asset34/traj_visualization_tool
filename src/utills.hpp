@@ -13,9 +13,6 @@ namespace Utills {
 /* Ptraj utills */
 PTraj *readTrajData(const QString &path);
 
-/* Other */
-int numDecimals(double value);
-
 } // Utills
 
 #endif // UTILLS_HPP

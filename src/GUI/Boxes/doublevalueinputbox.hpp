@@ -15,7 +15,9 @@ class DoubleValueInputBox : public QWidget
     Q_OBJECT
 
 public:
-    explicit DoubleValueInputBox(const QString &name = "", QWidget *parent = nullptr);
+    explicit DoubleValueInputBox(const QString &name = "",
+                                 int decimals = 2,
+                                 QWidget *parent = nullptr);
 
     QString getName() const;
     void setName(const QString &name);
@@ -24,6 +26,8 @@ public:
     void setMaximum(double max) const;
     double getMinimum() const;
     void setMinimum(double min);
+    int getDecimals() const;
+    void setDecimals(int d);
     double getStep() const;
     void setStep(double step);
 
