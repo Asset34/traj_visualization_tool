@@ -25,7 +25,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/Opengl/ptraj.cpp \
     src/Opengl/oglattractor.cpp \
     src/GUI/Windows/mainwindow.cpp \
     src/Opengl/camera.cpp \
@@ -34,16 +33,14 @@ SOURCES += \
     src/GUI/Boxes/flagsetbox.cpp \
     src/GUI/Boxes/valueslidebox.cpp \
     src/GUI/Boxes/doublevalueslidebox.cpp \
-    src/utills.cpp \
     src/GUI/Panels/trajpanel.cpp \
-    src/GUI/Panels/camerapanel.cpp \
     src/GUI/Boxes/valueoutputbox.cpp \
     src/GUI/Windows/trajwindow.cpp \
     src/GUI/Boxes/openfilebox.cpp \
-    src/GUI/Boxes/colorselectbox.cpp
+    src/GUI/Boxes/colorselectbox.cpp \
+    src/Opengl/traj.cpp
 
 HEADERS += \
-    src/Opengl/ptraj.hpp \
     src/Opengl/oglattractor.hpp \
     src/GUI/Windows/mainwindow.hpp \
     src/Opengl/camera.hpp \
@@ -52,13 +49,12 @@ HEADERS += \
     src/GUI/Boxes/flagsetbox.hpp \
     src/GUI/Boxes/valueslidebox.hpp \
     src/GUI/Boxes/doublevalueslidebox.hpp \
-    src/utills.hpp \
     src/GUI/Panels/trajpanel.hpp \
-    src/GUI/Panels/camerapanel.hpp \
     src/GUI/Boxes/valueoutputbox.hpp \
     src/GUI/Windows/trajwindow.hpp \
     src/GUI/Boxes/openfilebox.hpp \
-    src/GUI/Boxes/colorselectbox.hpp
+    src/GUI/Boxes/colorselectbox.hpp \
+    src/Opengl/traj.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \
