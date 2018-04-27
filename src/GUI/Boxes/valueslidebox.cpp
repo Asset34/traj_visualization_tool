@@ -11,18 +11,18 @@ ValueSlideBox::ValueSlideBox(const QString &name, QWidget *parent)
     m_valueSlider = new QSlider(Qt::Horizontal);
 
     /* Configurate layout */
-    m_mainLayout = new QHBoxLayout;
-    m_mainLayout->setMargin(5);
-    m_mainLayout->addWidget(m_valueSpinBox);
-    m_mainLayout->addWidget(m_valueSlider);
+    m_layout = new QHBoxLayout;
+    m_layout->setMargin(5);
+    m_layout->addWidget(m_valueSpinBox);
+    m_layout->addWidget(m_valueSlider);
 
     /* Configurate widget */
     setTitle(name);
 
-    setLayout(m_mainLayout);
+    setLayout(m_layout);
     setFixedHeight(40);
 
-    /* Configurate connections */
+    /* Set connections */
     connect(m_valueSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ValueSlideBox::valueChanged);
     connect(m_valueSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),

@@ -1,6 +1,9 @@
 #include "doublevalueslidebox.hpp"
 
-DoubleValueSlideBox::DoubleValueSlideBox(const QString &name, int decimals, QWidget *parent)
+DoubleValueSlideBox::DoubleValueSlideBox(const QString &name,
+                                         int decimals,
+                                         double step,
+                                         QWidget *parent)
     : QGroupBox(parent)
 {
     /* Configurate spin box */
@@ -21,8 +24,9 @@ DoubleValueSlideBox::DoubleValueSlideBox(const QString &name, int decimals, QWid
     setLayout(m_mainLayout);
     setFixedHeight(40);
     setDecimals(decimals);
+    setStep(step);
 
-    /* Configurate connections */
+    /* Set connections */
     connect(m_valueSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             this, &DoubleValueSlideBox::valueChanged);
     connect(m_valueSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
@@ -107,7 +111,13 @@ double DoubleValueSlideBox::convertValue(int value) const
 
 void DoubleValueSlideBox::setSpinBoxValue(int value)
 {
-    m_valueSpinBox->setValue(convertValue(value));
+    // Convert spinbox value to slider value
+    // to avoid comprasion of two double values
+    int convertedSpinBoxValue = convertValue(m_valueSpinBox->value());
+
+    if (convertedSpinBoxValue != value) {
+        m_valueSpinBox->setValue(convertValue(value));
+    }
 }
 
 void DoubleValueSlideBox::setSliderValue(double value)

@@ -1,6 +1,9 @@
 #include "doublevalueinputbox.hpp"
 
-DoubleValueInputBox::DoubleValueInputBox(const QString &name, int decimals, QWidget *parent)
+DoubleValueInputBox::DoubleValueInputBox(const QString &name,
+                                         int decimals,
+                                         double step,
+                                         QWidget *parent)
     : QWidget(parent)
 {
     /* Configurate label */
@@ -10,19 +13,20 @@ DoubleValueInputBox::DoubleValueInputBox(const QString &name, int decimals, QWid
     /* Configurate spin box */
     m_valueSpinBox = new QDoubleSpinBox;
     m_valueSpinBox->setFixedWidth(60);
+    m_valueSpinBox->setDecimals(decimals);
+    m_valueSpinBox->setSingleStep(step);
 
     /* Configurate layout */
-    m_mainLayout = new QHBoxLayout;
-    m_mainLayout->setMargin(0);
-    m_mainLayout->addWidget(m_nameLabel);
-    m_mainLayout->addWidget(m_valueSpinBox);
+    m_layout = new QHBoxLayout;
+    m_layout->setMargin(0);
+    m_layout->addWidget(m_nameLabel);
+    m_layout->addWidget(m_valueSpinBox);
 
     /* Configurate widget */
-    setLayout(m_mainLayout);
+    setLayout(m_layout);
     setFixedHeight(20);
-    m_valueSpinBox->setDecimals(decimals);
 
-    /* Configurate connections */
+    /* Set connections */
     connect(m_valueSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             this, &DoubleValueInputBox::valueChanged);
 }

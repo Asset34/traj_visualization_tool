@@ -13,16 +13,16 @@ FlagSetBox::FlagSetBox(const QString &name, QWidget *parent)
     m_flagCheckBox->setCheckState(Qt::Unchecked);
 
     /* Configurate layout */
-    m_mainLayout = new QHBoxLayout;
-    m_mainLayout->setMargin(0);
-    m_mainLayout->addWidget(m_flagCheckBox);
-    m_mainLayout->addWidget(m_nameLabel);
+    m_layout = new QHBoxLayout;
+    m_layout->setMargin(0);
+    m_layout->addWidget(m_flagCheckBox);
+    m_layout->addWidget(m_nameLabel);
 
     /* Configurate widget */
-    setLayout(m_mainLayout);
+    setLayout(m_layout);
     setFixedHeight(20);
 
-    /* Configurate connections */
+    /* Set connections */
     connect(m_flagCheckBox, &QCheckBox::stateChanged, this, &FlagSetBox::stateChanged);
 }
 

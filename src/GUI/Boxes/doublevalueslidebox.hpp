@@ -9,26 +9,30 @@
 
 #include <QtMath>
 
-#include "../../utills.hpp"
-
 class DoubleValueSlideBox : public QGroupBox
 {
     Q_OBJECT
 
 public:
-    explicit DoubleValueSlideBox(const QString &name = "",
+    explicit DoubleValueSlideBox(const QString &name = QString(),
                                  int decimals = 2,
+                                 double step = 0.1,
                                  QWidget *parent = nullptr);
 
     QString getName() const;
     void setName(const QString &name);
+
     double getValue() const;
+
     double getMaximum() const;
     void setMaximum(double max) const;
+
     double getMinimum() const;
     void setMinimum(double min);
+
     int getDecimals() const;
     void setDecimals(int d);
+
     double getStep() const;
     void setStep(double step);
 

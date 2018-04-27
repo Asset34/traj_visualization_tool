@@ -12,16 +12,16 @@ ValueInputBox::ValueInputBox(const QString &name, QWidget *parent)
     m_valueSpinBox->setFixedWidth(60);
 
     /* Configurate layout */
-    m_mainLayout = new QHBoxLayout;
-    m_mainLayout->setMargin(0);
-    m_mainLayout->addWidget(m_nameLabel);
-    m_mainLayout->addWidget(m_valueSpinBox);
+    m_layout = new QHBoxLayout;
+    m_layout->setMargin(0);
+    m_layout->addWidget(m_nameLabel);
+    m_layout->addWidget(m_valueSpinBox);
 
     /* Configurate widget */
-    setLayout(m_mainLayout);
+    setLayout(m_layout);
     setFixedHeight(20);
 
-    /* Configurate connections */
+    /* Set connections */
     connect(m_valueSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ValueInputBox::valueChanged);
 }
