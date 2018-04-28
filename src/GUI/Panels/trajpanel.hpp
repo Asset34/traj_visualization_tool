@@ -48,7 +48,7 @@ private:
 
 signals:
     void trajAdded(Traj *ptraj);
-    void trajDeleted(Traj *traj);
+    void trajDeleted(int pos);
     void trajFocused(Traj *traj);
     void trajEdited();
     void trajDisplayStatusChanged();

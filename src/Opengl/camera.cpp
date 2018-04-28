@@ -10,6 +10,26 @@ Camera::Camera()
 {
 }
 
+const QVector3D Camera::getCenter() const
+{
+    return m_center;
+}
+
+float Camera::getYaw() const
+{
+    return m_yaw;
+}
+
+float Camera::getPitch() const
+{
+    return m_pitch;
+}
+
+float Camera::getRadius() const
+{
+    return m_radius;
+}
+
 void Camera::moveCenter(const QVector3D &center)
 {
     m_center = center;
@@ -62,29 +82,29 @@ void Camera::updateEye()
 
 void Camera::normilizeYaw()
 {
-    if (m_yaw < CameraConstants::YAW_MIN) {
-        m_yaw = CameraConstants::YAW_MAX;
+    if (m_yaw < YAW_MIN) {
+        m_yaw = YAW_MAX;
     }
-    else if (m_yaw > CameraConstants::YAW_MAX){
-        m_yaw = CameraConstants::YAW_MIN;
+    else if (m_yaw > YAW_MAX){
+        m_yaw = YAW_MIN;
     }
 }
 
 void Camera::normilizePitch()
 {
-    if (m_pitch < CameraConstants::PITCH_MIN) {
-        m_pitch = CameraConstants::PITCH_MIN;
+    if (m_pitch < PITCH_MIN) {
+        m_pitch = PITCH_MIN;
     }
-    else if (m_pitch > CameraConstants::PITCH_MAX){
-        m_pitch = CameraConstants::PITCH_MAX;
+    else if (m_pitch > PITCH_MAX){
+        m_pitch = PITCH_MAX;
     }
 }
 void Camera::normilizeRadius()
 {
-    if (m_radius < CameraConstants::RADIUS_MIN) {
-        m_radius = CameraConstants::RADIUS_MIN;
+    if (m_radius < RADIUS_MIN) {
+        m_radius = RADIUS_MIN;
     }
-    else if (m_radius > CameraConstants::RADIUS_MAX) {
-        m_radius = CameraConstants::RADIUS_MAX;
+    else if (m_radius > RADIUS_MAX) {
+        m_radius = RADIUS_MAX;
     }
 }

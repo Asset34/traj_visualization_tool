@@ -84,24 +84,33 @@ void TrajPanel::deleteTraj()
 {
     int row = m_trajList->currentRow();
 
-    emit trajDeleted(m_trajs.at(row));
+    if (row >= 0 && row < m_trajs.count()) {
+        /* Delete traj */
+        m_trajs.removeAt(row);
 
-    /* Delete traj */
-    m_trajs.removeAt(row);
+        /* Delete from the list widget */
+        m_trajList->takeItem(row);
 
-    /* Delete from the list widget */
-    m_trajList->takeItem(row);
+        emit trajDeleted(row);
+    }
 }
 
 void TrajPanel::editTraj()
 {
-    // TODO
+    int row = m_trajList->currentRow();
+
+    if (row >= 0 && row < m_trajs.count()) {
+        // TODO
+    }
 }
 
 void TrajPanel::focusTraj()
 {
     int row = m_trajList->currentRow();
-    emit trajFocused(m_trajs.at(row));
+
+    if (row >= 0 && row < m_trajs.count()) {
+        emit trajFocused(m_trajs.at(row));
+    }
 }
 
 void TrajPanel::setDisplayStatus(QListWidgetItem *item)

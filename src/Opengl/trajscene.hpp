@@ -53,7 +53,7 @@ public:
 
 public slots:
     void addTraj(Traj *traj);
-    void deleteTraj(Traj *traj);
+    void deleteTraj(int pos);
     void focusTraj(Traj *traj);
     void setCurrentTime(double time);
 

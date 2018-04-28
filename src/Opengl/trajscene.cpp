@@ -92,15 +92,9 @@ void TrajScene::addTraj(Traj *traj)
     update();
 }
 
-void TrajScene::deleteTraj(Traj *traj)
+void TrajScene::deleteTraj(int pos)
 {
-    for (auto it = m_trajBuffers.begin(); it != m_trajBuffers.end(); ++it) {
-        if ((*it)->getTraj() == traj) {
-            m_trajBuffers.erase(it);
-            delete *it;
-        }
-    }
-
+    m_trajBuffers.removeAt(pos);
     update();
 }
 
