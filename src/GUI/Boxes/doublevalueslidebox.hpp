@@ -23,21 +23,17 @@ public:
     void setName(const QString &name);
 
     double getValue() const;
-
     double getMaximum() const;
-    void setMaximum(double max) const;
-
     double getMinimum() const;
-    void setMinimum(double min);
-
     int getDecimals() const;
-    void setDecimals(int d);
-
     double getStep() const;
-    void setStep(double step);
 
 public slots:
     void setValue(double value);
+    void setMaximum(double max);
+    void setMinimum(double min);
+    void setDecimals(int d);
+    void setStep(double step);
 
 private:
     QHBoxLayout *m_mainLayout;

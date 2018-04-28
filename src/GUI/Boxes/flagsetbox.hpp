@@ -12,15 +12,16 @@ class FlagSetBox : public QWidget
 
 public:
     explicit FlagSetBox(const QString &name = QString(),
+                        bool state = false,
                         QWidget *parent = nullptr);
 
     QString getName() const;
     void setName(const QString &name);
 
-    Qt::CheckState getState() const;
+    bool getState() const;
 
 public slots:
-    void setState(Qt::CheckState state);
+    void setState(bool state);
 
 private:
     QHBoxLayout *m_layout;
@@ -28,7 +29,7 @@ private:
     QCheckBox *m_flagCheckBox;
 
 signals:
-    void stateChanged(int state);
+    void stateChanged(bool state);
 
 };
 

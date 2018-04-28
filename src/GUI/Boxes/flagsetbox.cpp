@@ -1,6 +1,6 @@
 #include "flagsetbox.hpp"
 
-FlagSetBox::FlagSetBox(const QString &name, QWidget *parent)
+FlagSetBox::FlagSetBox(const QString &name, bool state, QWidget *parent)
     : QWidget(parent)
 {
     /* Configurate label */
@@ -10,7 +10,7 @@ FlagSetBox::FlagSetBox(const QString &name, QWidget *parent)
     /* Configurate check box */
     m_flagCheckBox = new QCheckBox;
     m_flagCheckBox->setFixedWidth(20);
-    m_flagCheckBox->setCheckState(Qt::Unchecked);
+    m_flagCheckBox->setChecked(state);
 
     /* Configurate layout */
     m_layout = new QHBoxLayout;
@@ -36,12 +36,13 @@ void FlagSetBox::setName(const QString &name)
     m_nameLabel->setText(name);
 }
 
-Qt::CheckState FlagSetBox::getState() const
+bool FlagSetBox::getState() const
 {
-    return m_flagCheckBox->checkState();
+    return m_flagCheckBox->isChecked();
 }
 
-void FlagSetBox::setState(Qt::CheckState state)
+void FlagSetBox::setState(bool state)
 {
-    m_flagCheckBox->setCheckState(state);
+    m_flagCheckBox->setChecked(state);
+    emit stateChanged(state);
 }

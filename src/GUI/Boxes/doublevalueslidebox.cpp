@@ -53,16 +53,31 @@ double DoubleValueSlideBox::getMaximum() const
 {
     return m_valueSpinBox->maximum();
 }
-
-void DoubleValueSlideBox::setMaximum(double max) const
-{
-    m_valueSpinBox->setMaximum(max);
-    m_valueSlider->setMaximum(convertValue(max));
-}
-
 double DoubleValueSlideBox::getMinimum() const
 {
     return m_valueSpinBox->minimum();
+}
+
+int DoubleValueSlideBox::getDecimals() const
+{
+    return m_valueSpinBox->decimals();
+}
+
+double DoubleValueSlideBox::getStep() const
+{
+    return m_valueSpinBox->singleStep();
+}
+
+void DoubleValueSlideBox::setValue(double value)
+{
+    m_valueSpinBox->setValue(value);
+    setSliderValue(value);
+}
+
+void DoubleValueSlideBox::setMaximum(double max)
+{
+    m_valueSpinBox->setMaximum(max);
+    m_valueSlider->setMaximum(convertValue(max));
 }
 
 void DoubleValueSlideBox::setMinimum(double min)
@@ -71,32 +86,16 @@ void DoubleValueSlideBox::setMinimum(double min)
     m_valueSlider->setMinimum(convertValue(min));
 }
 
-int DoubleValueSlideBox::getDecimals() const
-{
-    return m_valueSpinBox->decimals();
-}
-
 void DoubleValueSlideBox::setDecimals(int d)
 {
     m_convertFactor = qPow(10, d);
     m_valueSpinBox->setDecimals(d);
 }
 
-double DoubleValueSlideBox::getStep() const
-{
-    return m_valueSpinBox->singleStep();
-}
-
 void DoubleValueSlideBox::setStep(double step)
 {
     m_valueSpinBox->setSingleStep(step);
     m_valueSlider->setSingleStep(convertValue(step));
-}
-
-void DoubleValueSlideBox::setValue(double value)
-{
-    m_valueSpinBox->setValue(value);
-    setSliderValue(value);
 }
 
 int DoubleValueSlideBox::convertValue(double value) const
