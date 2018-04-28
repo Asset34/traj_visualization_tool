@@ -25,7 +25,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/Opengl/oglattractor.cpp \
     src/GUI/Windows/mainwindow.cpp \
     src/Opengl/camera.cpp \
     src/GUI/Boxes/valueinputbox.cpp \
@@ -38,10 +37,10 @@ SOURCES += \
     src/GUI/Windows/trajwindow.cpp \
     src/GUI/Boxes/openfilebox.cpp \
     src/GUI/Boxes/colorselectbox.cpp \
-    src/Opengl/traj.cpp
+    src/Opengl/traj.cpp \
+    src/Opengl/trajscene.cpp
 
 HEADERS += \
-    src/Opengl/oglattractor.hpp \
     src/GUI/Windows/mainwindow.hpp \
     src/Opengl/camera.hpp \
     src/GUI/Boxes/valueinputbox.hpp \
@@ -54,7 +53,8 @@ HEADERS += \
     src/GUI/Windows/trajwindow.hpp \
     src/GUI/Boxes/openfilebox.hpp \
     src/GUI/Boxes/colorselectbox.hpp \
-    src/Opengl/traj.hpp
+    src/Opengl/traj.hpp \
+    src/Opengl/trajscene.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \
