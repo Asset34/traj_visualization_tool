@@ -21,7 +21,6 @@ class TrajBuffer : protected QOpenGLFunctions
 {
 public:
     explicit TrajBuffer(Traj *traj);
-    //TrajBuffer(const TrajBuffer)
     ~TrajBuffer();
 
     void bind();
@@ -32,6 +31,7 @@ public:
     QVector3D getColor() const;
     int getVertexCount() const;
     int getVertexCount(double time) const;
+    bool getDisplayStatus() const;
 
 private:
     Traj *m_traj;
@@ -41,11 +41,8 @@ private:
     GLfloat *m_sceneData;
 };
 
-/*
- * TODO: Store trajectories as smart pointers
- * (because copy PTraj is too expensive and
- *  store PTraj as pointer is too unsafe)
- */
+
+
 class TrajScene : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -57,6 +54,7 @@ public:
 public slots:
     void addTraj(Traj *traj);
     void deleteTraj(Traj *traj);
+    void focusTraj(Traj *traj);
     void setCurrentTime(double time);
 
 protected:
@@ -96,6 +94,11 @@ private:
 
     /* Data buffers */
     QList<TrajBuffer*> m_trajBuffers;
+
+    /* Temp */
+    QOpenGLBuffer m_vbo;
+    QOpenGLVertexArrayObject m_vao;
+    GLfloat *m_data;
 };
 
 #endif // OGLATTRACTOR_HPP

@@ -14,7 +14,7 @@ TrajBuffer::TrajBuffer(Traj *traj)
     m_vao.bind();
         m_vbo.create();
         m_vbo.bind();
-        m_vbo.allocate(m_sceneData, traj->getDataCount());
+        m_vbo.allocate(m_sceneData, traj->getDataCount() * sizeof(GLfloat));
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
         glEnableVertexAttribArray(0);
     m_vao.release();
@@ -61,6 +61,11 @@ int TrajBuffer::getVertexCount(double time) const
     return m_traj->getVertexCount(time);
 }
 
+bool TrajBuffer::getDisplayStatus() const
+{
+    return m_traj->getDisplayStatus();
+}
+
 
 
 
@@ -99,6 +104,12 @@ void TrajScene::deleteTraj(Traj *traj)
     update();
 }
 
+void TrajScene::focusTraj(Traj *traj)
+{
+    m_camera.moveCenter(traj->getAverage());
+    update();
+}
+
 void TrajScene::setCurrentTime(double time)
 {
     m_currentTime = time;
@@ -108,7 +119,7 @@ void TrajScene::setCurrentTime(double time)
 void TrajScene::initializeGL()
 {
     initializeOpenGLFunctions();
-    glClearColor(0.52, 0.52, 0.52, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
 
     /* Create shader program */
     m_shprogram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl");
@@ -141,12 +152,13 @@ void TrajScene::paintGL()
     m_shprogram.bind();
         m_shprogram.setUniformValue(m_transformLoc, m_proj * m_camera.getViewMatrix() *  m_model);
         for (auto it = m_trajBuffers.begin(); it != m_trajBuffers.end(); ++it) {
-            (*it)->bind();
-                m_shprogram.setUniformValue(m_colorLoc, (*it)->getColor());
-                glDrawArrays(GL_LINE_STRIP, 0, (*it)->getVertexCount(m_currentTime));
-            (*it)->release();
+            if ((*it)->getDisplayStatus()) {
+                (*it)->bind();
+                    m_shprogram.setUniformValue(m_colorLoc, (*it)->getColor());
+                    glDrawArrays(GL_LINE_STRIP, 0, (*it)->getVertexCount(m_currentTime));
+                (*it)->release();
+            }
         }
-
     m_shprogram.release();
 }
 

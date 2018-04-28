@@ -22,6 +22,8 @@ public:
                   bool displayStatus = true,
                   const QColor &color = Qt::white);
 
+    const QVector3D &get(double time) const;
+
     double getBeginTime() const;
     double getEndTime() const;
     double getTimeStep() const;
@@ -33,6 +35,7 @@ public:
 
     bool getDisplayStatus() const;
     void setDisplayStatus(bool status);
+    void setDisplayStatus(Qt::CheckState state);
 
     const QColor &getColor() const;
     void setColor(const QColor &color);

@@ -13,6 +13,13 @@ Traj::Traj(double timeBegin,
 {
 }
 
+const QVector3D &Traj::get(double time) const
+{
+    int pos = time * m_pointPerSec;
+
+    return m_data.at(pos);
+}
+
 double Traj::getBeginTime() const
 {
     return m_timeBegin;
@@ -65,6 +72,16 @@ void Traj::setDisplayStatus(bool status)
     m_displayStatus = status;
 }
 
+void Traj::setDisplayStatus(Qt::CheckState state)
+{
+    if (state == Qt::Checked) {
+        m_displayStatus = true;
+    }
+    else {
+        m_displayStatus = false;
+    }
+}
+
 const QColor &Traj::getColor() const
 {
     return m_color;
@@ -96,7 +113,7 @@ QVector3D Traj::getAverage() const
 
 GLfloat *Traj::getOpenglData() const
 {
-    GLfloat *openglData = new GLfloat[3 * m_data.count()];
+    GLfloat *openglData = new GLfloat[getDataCount()];
 
     int i = 0;
     for (auto it = m_data.constBegin(); it != m_data.constEnd(); ++it) {
