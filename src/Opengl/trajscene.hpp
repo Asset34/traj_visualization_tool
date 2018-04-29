@@ -94,11 +94,6 @@ private:
 
     /* Data buffers */
     QList<TrajBuffer*> m_trajBuffers;
-
-    /* Temp */
-    QOpenGLBuffer m_vbo;
-    QOpenGLVertexArrayObject m_vao;
-    GLfloat *m_data;
 };
 
 #endif // OGLATTRACTOR_HPP
