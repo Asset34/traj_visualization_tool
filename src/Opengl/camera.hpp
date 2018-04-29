@@ -23,7 +23,7 @@ public:
 
 private:
     /* Camera vectors */
-    QVector3D m_eye;
+    QVector3D m_front;
     QVector3D m_center;
     QVector3D m_up;
 

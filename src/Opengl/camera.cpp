@@ -1,11 +1,11 @@
 #include "camera.hpp"
 
 Camera::Camera()
-    : m_eye        (QVector3D( 0.0, -10.0, 0.0 )),
-      m_center     (QVector3D( 0.0, 0.0, 0.0  )),
-      m_up         (QVector3D( 0.0, 0.0, 1.0  )),
-      m_yawVector  (QVector3D( 0.0, 0.0, 1.0  )),
-      m_pitchVector(QVector3D(-1.0, 0.0, 0.0  ))
+    : m_front      (QVector3D( 0.0, -10.0, 0.0 )),
+      m_center     (QVector3D( 0.0,   0.0, 0.0 )),
+      m_up         (QVector3D( 0.0,   0.0, 1.0 )),
+      m_yawVector  (QVector3D( 0.0,   0.0, 1.0 )),
+      m_pitchVector(QVector3D(-1.0,   0.0, 0.0 ))
 {
 }
 
@@ -24,8 +24,8 @@ void Camera::rotateYaw(float dangle)
     m_yawMatrix.setToIdentity();
     m_yawMatrix.rotate(dangle, m_yawVector);
 
-    /* Rotate camera eye */
-    m_eye = m_yawMatrix * m_eye;
+    /* Rotate camera front */
+    m_front = m_yawMatrix * m_front;
 
     /* Rotate camera up */
     m_up = m_yawMatrix * m_up;
@@ -39,8 +39,8 @@ void Camera::rotatePitch(float dangle)
     m_pitchMatrix.setToIdentity();
     m_pitchMatrix.rotate(dangle, m_pitchVector);
 
-    /* Rotate camera eye */
-    m_eye = m_pitchMatrix * m_eye;
+    /* Rotate camera front */
+    m_front = m_pitchMatrix * m_front;
 
     /* Rotate camera up */
     m_up = m_pitchMatrix * m_up;
@@ -61,13 +61,13 @@ void Camera::zoom(float factor)
     m_scaleMatrix.scale(factor);
 
     /* Update eye */
-    m_eye = m_scaleMatrix * m_eye;
+    m_front = m_scaleMatrix * m_front;
 }
 
 QMatrix4x4 Camera::getViewMatrix() const
 {
     QMatrix4x4 view;
-    view.lookAt(m_eye,m_center,m_up);
+    view.lookAt(m_center + m_front, m_center, m_up);
 
     return  view;
 }
