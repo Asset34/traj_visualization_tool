@@ -22,7 +22,7 @@ DoubleValueSlideBox::DoubleValueSlideBox(const QString &name,
     /* Configurate widget */
     setTitle(name);
     setLayout(m_mainLayout);
-    setFixedHeight(40);
+    setFixedHeight(50);
     setDecimals(decimals);
     setStep(step);
 
