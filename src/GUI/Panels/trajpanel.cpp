@@ -65,17 +65,21 @@ void TrajPanel::addTraj()
         /* Load traj */
         Traj *traj = w->getTraj();
 
-        updateTimeBorders(traj);
-
         /* Add traj */
         m_trajs.push_back(traj);
 
         /* Add traj to list widget */
-        QListWidgetItem *item = new QListWidgetItem(convertInitials(traj->getInitials()),
-                                                    m_trajList);
+        QListWidgetItem *item = new QListWidgetItem(convertInitials(traj->getInitials()), m_trajList);
         item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
         item->setCheckState(Qt::Checked);
 
+        /* Notify about current state */
+        if (m_trajs.count() == 1) {
+            emit trajStatusChanged(true);
+        }
+        updateGeneralTimeValues();
+
+        emit trajFocused(traj);
         emit trajAdded(traj);
     }
 }
@@ -84,12 +88,20 @@ void TrajPanel::deleteTraj()
 {
     int row = m_trajList->currentRow();
 
-    if (row >= 0 && row < m_trajs.count()) {
+    if (checkIndex(row)) {
         /* Delete traj */
         m_trajs.removeAt(row);
 
         /* Delete from the list widget */
         m_trajList->takeItem(row);
+
+        /* Notify about current state */
+        if (m_trajs.empty()) {
+            emit trajStatusChanged(false);
+        }
+        else {
+            updateGeneralTimeValues();
+        }
 
         emit trajDeleted(row);
     }
@@ -99,7 +111,7 @@ void TrajPanel::editTraj()
 {
     int row = m_trajList->currentRow();
 
-    if (row >= 0 && row < m_trajs.count()) {
+    if (checkIndex(row)) {
         // TODO
     }
 }
@@ -108,7 +120,7 @@ void TrajPanel::focusTraj()
 {
     int row = m_trajList->currentRow();
 
-    if (row >= 0 && row < m_trajs.count()) {
+    if (checkIndex(row)) {
         emit trajFocused(m_trajs.at(row));
     }
 }
@@ -134,25 +146,22 @@ QString TrajPanel::convertInitials(const QVector3D &initials)
     return str;
 }
 
-void TrajPanel::updateTimeBorders(Traj *traj)
+void TrajPanel::updateGeneralTimeValues()
 {
-    /* Get current time values */
-    int trajCount = m_trajList->count();
-    double beginTime = traj->getBeginTime();
-    double endTime = traj->getEndTime();
-    double timeStep = traj->getTimeStep();
+    /* Update minimal begin time */
+    double minBeginTime = TrajUtills::getMinBeginTime(m_trajs);
+    emit trajMinBeginTimeChanged(minBeginTime);
 
-    /* Update */
-    if (beginTime < m_minBeginTime || trajCount == 0) {
-        m_minBeginTime = beginTime;
-        emit trajMinBeginTimeChanged(m_minBeginTime);
-    }
-    if (endTime > m_maxEndTime || trajCount == 0) {
-        m_maxEndTime = endTime;
-        emit trajMaxEndTimeCHanged(m_maxEndTime);
-    }
-    if (timeStep < m_minTimeStep || trajCount == 0) {
-        m_minTimeStep = timeStep;
-        emit trajMinTimeStepChanged(m_minTimeStep);
-    }
+    /* Update maximum end time */
+    double maxEndTime = TrajUtills::getMaxEndTime(m_trajs);
+    emit trajMaxEndTimeChanged(maxEndTime);
+
+    /* Update minimal time step */
+    double minTimeStep = TrajUtills::getMinTimeStep(m_trajs);
+    emit trajMinTimeStepChanged(minTimeStep);
+}
+
+bool TrajPanel::checkIndex(int index)
+{
+    return index >= 0 && index < m_trajList->count();
 }

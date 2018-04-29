@@ -175,7 +175,7 @@ Traj *TrajUtills::readTraj(const QString &path)
     return nullptr;
 }
 
-double TrajUtills::minimumBeginTime(const QList<Traj*> &trajList)
+double TrajUtills::getMinBeginTime(const QList<Traj*> &trajList)
 {
     double min = trajList.first()->getBeginTime();
 
@@ -190,7 +190,7 @@ double TrajUtills::minimumBeginTime(const QList<Traj*> &trajList)
     return min;
 }
 
-double TrajUtills::maximumEndTime(const QList<Traj*> &trajList)
+double TrajUtills::getMaxEndTime(const QList<Traj*> &trajList)
 {
     double max = trajList.first()->getEndTime();
 
@@ -203,4 +203,19 @@ double TrajUtills::maximumEndTime(const QList<Traj*> &trajList)
     }
 
     return max;
+}
+
+double TrajUtills::getMinTimeStep(const QList<Traj *> &trajList)
+{
+    double min = trajList.first()->getTimeStep();
+
+    double step;
+    for (auto it = trajList.constBegin(); it != trajList.constEnd(); ++it) {
+        step = (*it)->getTimeStep();
+        if (step < min) {
+            min = step;
+        }
+    }
+
+    return min;
 }

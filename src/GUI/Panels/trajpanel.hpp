@@ -44,7 +44,9 @@ private:
     double m_maxEndTime;
     double m_minTimeStep;
 
-    void updateTimeBorders(Traj *traj);
+    void updateGeneralTimeValues();
+
+    bool checkIndex(int index);
 
 signals:
     void trajAdded(Traj *ptraj);
@@ -53,8 +55,9 @@ signals:
     void trajEdited();
     void trajDisplayStatusChanged();
     void trajMinBeginTimeChanged(double time);
-    void trajMaxEndTimeCHanged(double time);
+    void trajMaxEndTimeChanged(double time);
     void trajMinTimeStepChanged(double step);
+    void trajStatusChanged(bool status);
 };
 
 #endif // TRAJPANEL_HPP

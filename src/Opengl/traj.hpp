@@ -61,8 +61,9 @@ private:
 namespace TrajUtills {
 
 Traj *readTraj(const QString &path);
-double minimumBeginTime(const QList<Traj*> &trajList);
-double maximumEndTime(const QList<Traj*> &trajList);
+double getMinBeginTime(const QList<Traj*> &trajList);
+double getMaxEndTime(const QList<Traj*> &trajList);
+double getMinTimeStep(const QList<Traj*> &trajList);
 
 } // TrajUtills
 

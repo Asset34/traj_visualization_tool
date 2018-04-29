@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     /* Configurate time box */
     m_timeBox = new DoubleValueSlideBox("Time", 3, 0.1);
+    m_timeBox->setEnabled(false);
 
     /* Configurate traj panel */
     m_trajPanel = new TrajPanel;
@@ -43,7 +44,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_trajPanel, &TrajPanel::trajFocused, m_scene, &TrajScene::focusTraj);
     connect(m_trajPanel, &TrajPanel::trajDisplayStatusChanged, m_scene, static_cast<void (TrajScene::*)()>(&TrajScene::update));
     connect(m_trajPanel, &TrajPanel::trajMinBeginTimeChanged, m_timeBox, &DoubleValueSlideBox::setMinimum);
-    connect(m_trajPanel, &TrajPanel::trajMaxEndTimeCHanged, m_timeBox, &DoubleValueSlideBox::setMaximum);
+    connect(m_trajPanel, &TrajPanel::trajMaxEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setMaximum);
+    connect(m_trajPanel, &TrajPanel::trajMaxEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setValue);
     connect(m_trajPanel, &TrajPanel::trajMinTimeStepChanged, m_timeBox, &DoubleValueSlideBox::setStep);
+    connect(m_trajPanel, &TrajPanel::trajStatusChanged, m_timeBox, &DoubleValueSlideBox::setEnabled);
     connect(m_timeBox, &DoubleValueSlideBox::valueChanged, m_scene, &TrajScene::setCurrentTime);
 }
