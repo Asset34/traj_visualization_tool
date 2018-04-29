@@ -18,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
     /* Configurate traj panel */
     m_trajPanel = new TrajPanel;
 
+    /* Configurate scene panel */
+    m_scenePanel = new ScenePanel;
+
     /* Configurate scene layout */
     m_sceneLayout = new QVBoxLayout;
     m_sceneLayout->addWidget(m_scene);
@@ -26,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     /* Configurate panel layout */
     m_panelLayout = new QVBoxLayout;
     m_panelLayout->addWidget(m_trajPanel);
+    m_panelLayout->addWidget(m_scenePanel);
 
     /* Configurate main layout */
     m_mainLayout = new QHBoxLayout;
@@ -49,4 +53,5 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_trajPanel, &TrajPanel::trajMinTimeStepChanged, m_timeBox, &DoubleValueSlideBox::setStep);
     connect(m_trajPanel, &TrajPanel::trajStatusChanged, m_timeBox, &DoubleValueSlideBox::setEnabled);
     connect(m_timeBox, &DoubleValueSlideBox::valueChanged, m_scene, &TrajScene::setCurrentTime);
+    connect(m_scenePanel, &ScenePanel::backgroundColorChanged, m_scene, &TrajScene::setBackgroundColor);
 }

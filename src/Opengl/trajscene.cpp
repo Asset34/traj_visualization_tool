@@ -110,10 +110,20 @@ void TrajScene::setCurrentTime(double time)
     update();
 }
 
+void TrajScene::setBackgroundColor(const QColor &color)
+{
+    makeCurrent();
+
+    glClearColor(color.redF(), color.greenF(), color.blueF(), 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    update();
+}
+
 void TrajScene::initializeGL()
 {
     initializeOpenGLFunctions();
-    glClearColor(0.0, 0.0, 0.0, 1.0);
+    setBackgroundColor(Qt::gray);
 
     /* Create shader program */
     m_shprogram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl");

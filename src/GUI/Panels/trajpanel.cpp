@@ -43,10 +43,10 @@ TrajPanel::TrajPanel(QWidget *parent)
     m_mainLayout->addLayout(m_buttonsLayout);
 
     /* Configurate widget */
-    setLayout(m_mainLayout);
     setTitle("Trajectories");
     setContentsMargins(5, 15, 5, 5);
     setFixedWidth(150);
+    setLayout(m_mainLayout);
 
     /* Configurate connections */
     connect(m_addButton, &QPushButton::clicked, this, &TrajPanel::addTraj);

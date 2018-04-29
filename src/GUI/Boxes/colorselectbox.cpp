@@ -1,9 +1,10 @@
 #include "colorselectbox.hpp"
 
 ColorSelectBox::ColorSelectBox(const QString &name,
+                               const QColor &color,
                                QWidget *parent)
     : QGroupBox(parent),
-      m_color(Qt::white)
+      m_color(color)
 {
     /* Configurate label */
     m_colorLabel = new QLabel;

@@ -17,6 +17,7 @@ class ColorSelectBox : public QGroupBox
 
 public:
     explicit ColorSelectBox(const QString &name = QString(),
+                            const QColor &color = Qt::white,
                             QWidget *parent = nullptr);
 
     QString getName() const;

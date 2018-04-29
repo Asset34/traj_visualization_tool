@@ -39,7 +39,8 @@ SOURCES += \
     src/Opengl/traj.cpp \
     src/Opengl/trajscene.cpp \
     src/GUI/Panels/trajsettingspanel.cpp \
-    src/GUI/Windows/addtrajwindow.cpp
+    src/GUI/Windows/addtrajwindow.cpp \
+    src/GUI/Panels/scenepanel.cpp
 
 HEADERS += \
     src/GUI/Windows/mainwindow.hpp \
@@ -56,7 +57,8 @@ HEADERS += \
     src/Opengl/traj.hpp \
     src/Opengl/trajscene.hpp \
     src/GUI/Panels/trajsettingspanel.hpp \
-    src/GUI/Windows/addtrajwindow.hpp
+    src/GUI/Windows/addtrajwindow.hpp \
+    src/GUI/Panels/scenepanel.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \

@@ -55,7 +55,10 @@ public slots:
     void addTraj(Traj *traj);
     void deleteTraj(int pos);
     void focusTraj(Traj *traj);
+
     void setCurrentTime(double time);
+
+    void setBackgroundColor(const QColor &color);
 
 protected:
     /* OpenGL events */
