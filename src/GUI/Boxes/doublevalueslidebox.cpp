@@ -4,7 +4,7 @@ DoubleValueSlideBox::DoubleValueSlideBox(const QString &name,
                                          int decimals,
                                          double step,
                                          QWidget *parent)
-    : QGroupBox(parent)
+    : AbstractBox(name, parent)
 {
     /* Configurate spin box */
     m_valueSpinBox = new QDoubleSpinBox;
@@ -20,7 +20,6 @@ DoubleValueSlideBox::DoubleValueSlideBox(const QString &name,
     m_mainLayout->addWidget(m_valueSlider);
 
     /* Configurate widget */
-    setTitle(name);
     setLayout(m_mainLayout);
     setFixedHeight(50);
     setDecimals(decimals);
@@ -32,16 +31,6 @@ DoubleValueSlideBox::DoubleValueSlideBox(const QString &name,
     connect(m_valueSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             this, &DoubleValueSlideBox::setSliderValue);
     connect(m_valueSlider, &QSlider::valueChanged, this, &DoubleValueSlideBox::setSpinBoxValue);
-}
-
-QString DoubleValueSlideBox::getName() const
-{
-    return title();
-}
-
-void DoubleValueSlideBox::setName(const QString &name)
-{
-    setTitle(name);
 }
 
 double DoubleValueSlideBox::getValue() const

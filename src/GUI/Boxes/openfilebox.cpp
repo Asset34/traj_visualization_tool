@@ -4,7 +4,7 @@ OpenFileBox::OpenFileBox(const QString &name,
                          const QString &directory,
                          const QString &filter,
                          QWidget *parent)
-    : QGroupBox(parent),
+    : AbstractBox(name, parent),
       m_directory(directory),
       m_filter(filter)
 {
@@ -26,23 +26,12 @@ OpenFileBox::OpenFileBox(const QString &name,
     m_layout->addWidget(m_fileDialogButton);
 
     /* Configurate widget */
-    setTitle(name);
     setFixedHeight(50);
     setContentsMargins(5, 5, 5, 0);
     setLayout(m_layout);
 
     /* Set connections */
     connect(m_fileDialogButton, &QPushButton::clicked, this, &OpenFileBox::setPath);
-}
-
-QString OpenFileBox::getName() const
-{
-    return title();
-}
-
-void OpenFileBox::setName(const QString &name)
-{
-    setTitle(name);
 }
 
 const QString &OpenFileBox::getDirectory() const

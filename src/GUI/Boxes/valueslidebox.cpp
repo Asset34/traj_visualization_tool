@@ -1,7 +1,7 @@
 #include "valueslidebox.hpp"
 
 ValueSlideBox::ValueSlideBox(const QString &name, QWidget *parent)
-    : QGroupBox(parent)
+    : AbstractBox(name, parent)
 {
     /* Configurate spin box */
     m_valueSpinBox = new QSpinBox;
@@ -17,8 +17,6 @@ ValueSlideBox::ValueSlideBox(const QString &name, QWidget *parent)
     m_layout->addWidget(m_valueSlider);
 
     /* Configurate widget */
-    setTitle(name);
-
     setLayout(m_layout);
     setFixedHeight(40);
 
@@ -28,16 +26,6 @@ ValueSlideBox::ValueSlideBox(const QString &name, QWidget *parent)
     connect(m_valueSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             m_valueSlider, &QSlider::setValue);
     connect(m_valueSlider, &QSlider::valueChanged, m_valueSpinBox, &QSpinBox::setValue);
-}
-
-QString ValueSlideBox::getName() const
-{
-    return title();
-}
-
-void ValueSlideBox::setName(const QString &name)
-{
-    setTitle(name);
 }
 
 int ValueSlideBox::getValue() const

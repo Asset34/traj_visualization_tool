@@ -3,10 +3,11 @@
 
 #include <QHBoxLayout>
 
-#include <QLabel>
 #include <QDoubleSpinBox>
 
-class DoubleValueInputBox : public QWidget
+#include "simpleabstractbox.hpp"
+
+class DoubleValueInputBox : public SimpleAbstractBox
 {
     Q_OBJECT
 
@@ -15,9 +16,6 @@ public:
                                  int decimals = 2,
                                  double step = 0.1,
                                  QWidget *parent = nullptr);
-
-    QString getName() const;
-    void setName(const QString &name);
 
     double getValue() const;
 
@@ -38,7 +36,6 @@ public slots:
 
 private:
     QHBoxLayout *m_layout;
-    QLabel *m_nameLabel;
     QDoubleSpinBox *m_valueSpinBox;
 
 signals:

@@ -3,10 +3,11 @@
 
 #include <QHBoxLayout>
 
-#include <QLabel>
 #include <QCheckBox>
 
-class FlagSetBox : public QWidget
+#include "simpleabstractbox.hpp"
+
+class FlagSetBox : public SimpleAbstractBox
 {
     Q_OBJECT
 
@@ -15,9 +16,6 @@ public:
                         bool state = false,
                         QWidget *parent = nullptr);
 
-    QString getName() const;
-    void setName(const QString &name);
-
     bool getState() const;
 
 public slots:
@@ -25,7 +23,6 @@ public slots:
 
 private:
     QHBoxLayout *m_layout;
-    QLabel *m_nameLabel;
     QCheckBox *m_flagCheckBox;
 
 signals:

@@ -3,7 +3,7 @@
 ColorSelectBox::ColorSelectBox(const QString &name,
                                const QColor &color,
                                QWidget *parent)
-    : QGroupBox(parent),
+    : AbstractBox(name, parent),
       m_color(color)
 {
     /* Configurate label */
@@ -24,18 +24,27 @@ ColorSelectBox::ColorSelectBox(const QString &name,
     m_layout->addWidget(m_colorButton);
 
     /* Configurate widget */
-    setTitle(name);
     setFixedHeight(50);
     setContentsMargins(5, 5, 5, 0);
     setLayout(m_layout);
 
     /* Set connections */
-    connect(m_colorButton, &QPushButton::clicked, this, &ColorSelectBox::setColor);
+    connect(m_colorButton, &QPushButton::clicked, this, &ColorSelectBox::setColorFromDialog);
 }
 
 const QColor &ColorSelectBox::getColor() const
 {
     return m_color;
+}
+
+void ColorSelectBox::setColor(const QColor &color)
+{
+    if (color.isValid()) {
+        m_color = color;
+        setLabelColor();
+
+        emit colorChanged(m_color);
+    }
 }
 
 void ColorSelectBox::setLabelColor()
@@ -47,14 +56,8 @@ void ColorSelectBox::setLabelColor()
     m_colorLabel->setPalette(palette);
 }
 
-void ColorSelectBox::setColor()
+void ColorSelectBox::setColorFromDialog()
 {
     QColor color = QColorDialog::getColor();
-
-    if (color.isValid()) {
-        m_color = color;
-        setLabelColor();
-
-        emit colorChanged(m_color);
-    }
+    setColor(color);
 }

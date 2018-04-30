@@ -1,17 +1,13 @@
 #ifndef TRAJPANEL_HPP
 #define TRAJPANEL_HPP
 
-#include <QHBoxLayout>
 #include <QVBoxLayout>
 
 #include <QGroupBox>
-#include <QListWidget>
-#include <QPushButton>
-
-#include <QVector3D>
 
 #include "../../Opengl/traj.hpp"
-#include "../Windows/addtrajwindow.hpp"
+#include "../Boxes/outputbox.hpp"
+#include "../Boxes/colorselectbox.hpp"
 
 class TrajPanel : public QGroupBox
 {
@@ -21,43 +17,23 @@ public:
     explicit TrajPanel(QWidget *parent = nullptr);
 
 public slots:
-    void addTraj();
-    void deleteTraj();
-    void editTraj();
-    void focusTraj();
-    void setDisplayStatus(QListWidgetItem *item);
+    void setTraj(Traj *traj);
+    void enable();
+    void disable();
 
 private:
-    QHBoxLayout *m_mainLayout;
-    QVBoxLayout *m_buttonsLayout;
-    QListWidget *m_trajList;
-    QPushButton *m_addButton;
-    QPushButton *m_deleteButton;
-    QPushButton *m_editButton;
-    QPushButton *m_focusButton;
+    QVBoxLayout *m_layout;
+    OutputBox *m_nameBox;
+    ColorSelectBox *m_colorBox;
 
-    QString convertInitials(const QVector3D &initials);
+    Traj *m_traj;
 
-    QList<Traj*> m_trajs;
-
-    double m_minBeginTime;
-    double m_maxEndTime;
-    double m_minTimeStep;
-
-    void updateGeneralTimeValues();
-
-    bool checkIndex(int index);
+private slots:
+    void setColor(const QColor &color);
 
 signals:
-    void trajAdded(Traj *ptraj);
-    void trajDeleted(int pos);
-    void trajFocused(Traj *traj);
-    void trajEdited();
-    void trajDisplayStatusChanged();
-    void trajMinBeginTimeChanged(double time);
-    void trajMaxEndTimeChanged(double time);
-    void trajMinTimeStepChanged(double step);
-    void trajStatusChanged(bool status);
+    void trajUpdated();
+
 };
 
 #endif // TRAJPANEL_HPP

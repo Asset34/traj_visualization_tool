@@ -12,7 +12,7 @@
 
 #include "../../Opengl/traj.hpp"
 #include "../Boxes/openfilebox.hpp"
-#include "../Panels/trajsettingspanel.hpp"
+#include "../Boxes/textinputbox.hpp"
 
 class AddTrajWindow : public QDialog
 {
@@ -24,10 +24,11 @@ public:
     Traj *getTraj() const;
 
 private:
-    QVBoxLayout *m_mainLayout;
-    QHBoxLayout *m_buttonsLayout;
+    QHBoxLayout *m_mainLayout;
+    QVBoxLayout *m_inputLayout;
+    QVBoxLayout *m_buttonsLayout;
+    TextInputBox *m_nameBox;
     OpenFileBox *m_pathBox;
-    TrajSettingsPanel *m_settingsPanel;
     QPushButton *m_okButton;
     QPushButton *m_cancelButton;
 };

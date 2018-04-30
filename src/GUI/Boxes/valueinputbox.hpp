@@ -3,19 +3,17 @@
 
 #include <QHBoxLayout>
 
-#include <QLabel>
 #include <QSpinBox>
 
-class ValueInputBox : public QWidget
+#include "simpleabstractbox.hpp"
+
+class ValueInputBox : public SimpleAbstractBox
 {
     Q_OBJECT
 
 public:
     explicit ValueInputBox(const QString &name = QString(),
                            QWidget *parent = nullptr);
-
-    QString getName() const;
-    void setName(const QString &name);
 
     int getValue() const;
 
@@ -33,7 +31,6 @@ public slots:
 
 private:
     QHBoxLayout *m_layout;
-    QLabel *m_nameLabel;
     QSpinBox *m_valueSpinBox;
 
 signals:

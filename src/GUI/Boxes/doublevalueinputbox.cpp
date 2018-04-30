@@ -4,12 +4,8 @@ DoubleValueInputBox::DoubleValueInputBox(const QString &name,
                                          int decimals,
                                          double step,
                                          QWidget *parent)
-    : QWidget(parent)
+    : SimpleAbstractBox(name, parent)
 {
-    /* Configurate label */
-    m_nameLabel = new QLabel(name);
-    m_nameLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-
     /* Configurate spin box */
     m_valueSpinBox = new QDoubleSpinBox;
     m_valueSpinBox->setFixedWidth(60);
@@ -29,16 +25,6 @@ DoubleValueInputBox::DoubleValueInputBox(const QString &name,
     /* Set connections */
     connect(m_valueSpinBox, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
             this, &DoubleValueInputBox::valueChanged);
-}
-
-QString DoubleValueInputBox::getName() const
-{
-    return m_nameLabel->text();
-}
-
-void DoubleValueInputBox::setName(const QString &name)
-{
-    m_nameLabel->setText(name);
 }
 
 double DoubleValueInputBox::getValue() const

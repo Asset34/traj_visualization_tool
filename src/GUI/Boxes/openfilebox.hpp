@@ -3,13 +3,14 @@
 
 #include <QHBoxLayout>
 
-#include <QGroupBox>
 #include <QTextEdit>
 #include <QPushButton>
 
 #include <QFileDialog>
 
-class OpenFileBox : public QGroupBox
+#include "abstractbox.hpp"
+
+class OpenFileBox : public AbstractBox
 {
     Q_OBJECT
 
@@ -18,9 +19,6 @@ public:
                          const QString &directory = QString(),
                          const QString &filter = QString(),
                          QWidget *parent = nullptr);
-
-    QString getName() const;
-    void setName(const QString &name);
 
     const QString &getDirectory() const;
     void setDirectory(const QString &directory);

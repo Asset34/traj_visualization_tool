@@ -5,24 +5,23 @@
 
 #include <QLabel>
 
-class ValueOutputBox : public QWidget
+#include "simpleabstractbox.hpp"
+
+class OutputBox : public SimpleAbstractBox
 {
     Q_OBJECT
 
 public:
-    explicit ValueOutputBox(const QString &name = QString(),
-                            QWidget *parent = nullptr);
-
-    QString getName() const;
-    void setName(const QString &name);
+    explicit OutputBox(const QString &name = QString(),
+                       QWidget *parent = nullptr);
 
 public slots:
+    void setText(const QString &text);
     void setValue(int value);
     void setValue(double value);
 
 private:
     QHBoxLayout *m_layout;
-    QLabel *m_nameLabel;
     QLabel *m_valueLabel;
 
 };

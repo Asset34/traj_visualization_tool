@@ -3,20 +3,18 @@
 
 #include <QHBoxLayout>
 
-#include <QGroupBox>
 #include <QSpinBox>
 #include <QSlider>
 
-class ValueSlideBox : public QGroupBox
+#include "abstractbox.hpp"
+
+class ValueSlideBox : public AbstractBox
 {
     Q_OBJECT
 
 public:
     explicit ValueSlideBox(const QString &name = QString(),
                            QWidget *parent = nullptr);
-
-    QString getName() const;
-    void setName(const QString &name);
 
     int getValue() const;
 

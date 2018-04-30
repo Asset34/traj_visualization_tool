@@ -16,7 +16,8 @@
 class Traj
 {
 public:
-    explicit Traj(double timeBegin,
+    explicit Traj(const QString &name,
+                  double timeBegin,
                   double timeEnd,
                   int pointPerSec,
                   bool displayStatus = true,
@@ -37,10 +38,11 @@ public:
     void setDisplayStatus(bool status);
     void setDisplayStatus(Qt::CheckState state);
 
+    const QString &getName() const;
+
     const QColor &getColor() const;
     void setColor(const QColor &color);
 
-    const QVector3D &getInitials() const;
     QVector3D getAverage() const;
 
     GLfloat *getOpenglData() const;
@@ -52,6 +54,8 @@ private:
     double m_timeEnd;
     int m_pointPerSec;
     bool m_displayStatus;
+
+    QString m_name;
     QColor m_color;
 
     QList<QVector3D> m_data;
@@ -60,7 +64,7 @@ private:
 
 namespace TrajUtills {
 
-Traj *readTraj(const QString &path);
+Traj *readTraj(const QString &name, const QString &path);
 double getMinBeginTime(const QList<Traj*> &trajList);
 double getMaxEndTime(const QList<Traj*> &trajList);
 double getMinTimeStep(const QList<Traj*> &trajList);

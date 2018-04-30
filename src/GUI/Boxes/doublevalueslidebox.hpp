@@ -3,13 +3,14 @@
 
 #include <QHBoxLayout>
 
-#include <QGroupBox>
 #include <QSlider>
 #include <QDoubleSpinBox>
 
 #include <QtMath>
 
-class DoubleValueSlideBox : public QGroupBox
+#include "abstractbox.hpp"
+
+class DoubleValueSlideBox : public AbstractBox
 {
     Q_OBJECT
 
@@ -18,9 +19,6 @@ public:
                                  int decimals = 2,
                                  double step = 0.1,
                                  QWidget *parent = nullptr);
-
-    QString getName() const;
-    void setName(const QString &name);
 
     double getValue() const;
     double getMaximum() const;

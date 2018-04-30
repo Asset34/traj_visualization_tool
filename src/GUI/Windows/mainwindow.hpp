@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 
 #include "../Boxes/doublevalueslidebox.hpp"
+#include "../Panels/trajcontrolpanel.hpp"
 #include "../Panels/trajpanel.hpp"
 #include "../Panels/scenepanel.hpp"
 #include "../../Opengl/trajscene.hpp"
@@ -24,6 +25,7 @@ private:
     QHBoxLayout *m_mainLayout;
     TrajScene *m_scene;
     DoubleValueSlideBox *m_timeBox;
+    TrajControlPanel *m_trajControlPanel;
     TrajPanel *m_trajPanel;
     ScenePanel *m_scenePanel;
 };

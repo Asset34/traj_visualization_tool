@@ -3,165 +3,48 @@
 TrajPanel::TrajPanel(QWidget *parent)
     : QGroupBox(parent)
 {
-    /* Configurate list widget */
-    m_trajList = new QListWidget;
-    m_trajList->setFixedWidth(80);
+    /* Configurate name box */
+    m_nameBox = new OutputBox("Name");
 
-    /* Configurate add button */
-    m_addButton = new QPushButton("Add");
-    m_addButton->setFixedHeight(25);
-    m_addButton->setFixedWidth(40);
+    /* Configurate color box */
+    m_colorBox = new ColorSelectBox("Color");
 
-    /* Configurate delete button */
-    m_deleteButton = new QPushButton("Delete");
-    m_deleteButton->setFixedHeight(25);
-    m_deleteButton->setFixedWidth(40);
-
-    /* Configurate edit button */
-    m_editButton = new QPushButton("Edit");
-    m_editButton->setFixedHeight(25);
-    m_editButton->setFixedWidth(40);
-
-    /* Configurate focus button */
-    m_focusButton = new QPushButton("Focus");
-    m_focusButton->setFixedHeight(25);
-    m_focusButton->setFixedWidth(40);
-
-    /* Configurate buttons layout */
-    m_buttonsLayout = new QVBoxLayout;
-    m_buttonsLayout->setMargin(0);
-    m_buttonsLayout->addWidget(m_addButton);
-    m_buttonsLayout->addWidget(m_deleteButton);
-    m_buttonsLayout->addWidget(m_editButton);
-    m_buttonsLayout->addWidget(m_focusButton);
-    m_buttonsLayout->addStretch(1);
-
-    /* Configurate main layout */
-    m_mainLayout = new QHBoxLayout;
-    m_mainLayout->setMargin(0);
-    m_mainLayout->addWidget(m_trajList);
-    m_mainLayout->addLayout(m_buttonsLayout);
+    /* Configurate layout */
+    m_layout = new QVBoxLayout;
+    m_layout->setMargin(0);
+    m_layout->addWidget(m_nameBox);
+    m_layout->addWidget(m_colorBox);
 
     /* Configurate widget */
-    setTitle("Trajectories");
+    setTitle("Trajectory settings");
     setContentsMargins(5, 15, 5, 5);
-    setFixedWidth(150);
-    setLayout(m_mainLayout);
+    setLayout(m_layout);
 
-    /* Configurate connections */
-    connect(m_addButton, &QPushButton::clicked, this, &TrajPanel::addTraj);
-    connect(m_deleteButton, &QPushButton::clicked, this, &TrajPanel::deleteTraj);
-    connect(m_editButton, &QPushButton::clicked, this, &TrajPanel::editTraj);
-    connect(m_focusButton, &QPushButton::clicked, this, &TrajPanel::focusTraj);
-    connect(m_trajList, &QListWidget::itemChanged, this, &TrajPanel::setDisplayStatus);
+    /* Set connections */
+    connect(m_colorBox, &ColorSelectBox::colorChanged, this, &TrajPanel::setColor);
 }
 
-void TrajPanel::addTraj()
+void TrajPanel::setTraj(Traj *traj)
 {
-    AddTrajWindow *w = new AddTrajWindow(this);
-    w->exec();
+    m_traj = traj;
 
-    if (w->result() == QDialog::Accepted) {
-        /* Load traj */
-        Traj *traj = w->getTraj();
-
-        /* Add traj */
-        m_trajs.push_back(traj);
-
-        /* Add traj to list widget */
-        QListWidgetItem *item = new QListWidgetItem(convertInitials(traj->getInitials()), m_trajList);
-        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-        item->setCheckState(Qt::Checked);
-
-        /* Notify about current state */
-        if (m_trajs.count() == 1) {
-            emit trajStatusChanged(true);
-        }
-        updateGeneralTimeValues();
-
-        emit trajFocused(traj);
-        emit trajAdded(traj);
-    }
+    /* Set current parameters */
+    m_nameBox->setText(m_traj->getName());
+    m_colorBox->setColor(m_traj->getColor());
 }
 
-void TrajPanel::deleteTraj()
+void TrajPanel::enable()
 {
-    int row = m_trajList->currentRow();
-
-    if (checkIndex(row)) {
-        /* Delete traj */
-        m_trajs.removeAt(row);
-
-        /* Delete from the list widget */
-        m_trajList->takeItem(row);
-
-        /* Notify about current state */
-        if (m_trajs.empty()) {
-            emit trajStatusChanged(false);
-        }
-        else {
-            updateGeneralTimeValues();
-        }
-
-        emit trajDeleted(row);
-    }
+    setEnabled(true);
 }
 
-void TrajPanel::editTraj()
+void TrajPanel::disable()
 {
-    int row = m_trajList->currentRow();
-
-    if (checkIndex(row)) {
-        // TODO
-    }
+    setEnabled(false);
 }
 
-void TrajPanel::focusTraj()
+void TrajPanel::setColor(const QColor &color)
 {
-    int row = m_trajList->currentRow();
-
-    if (checkIndex(row)) {
-        emit trajFocused(m_trajs.at(row));
-    }
-}
-
-void TrajPanel::setDisplayStatus(QListWidgetItem *item)
-{
-    int row = m_trajList->row(item);
-    Qt::CheckState status = item->checkState();
-
-    m_trajs.at(row)->setDisplayStatus(status);
-
-    emit trajDisplayStatusChanged();
-}
-
-QString TrajPanel::convertInitials(const QVector3D &initials)
-{
-    QString str;
-
-    str.append(QString::number(initials.x()) + ", ");
-    str.append(QString::number(initials.y()) + ", ");
-    str.append(QString::number(initials.z()));
-
-    return str;
-}
-
-void TrajPanel::updateGeneralTimeValues()
-{
-    /* Update minimal begin time */
-    double minBeginTime = TrajUtills::getMinBeginTime(m_trajs);
-    emit trajMinBeginTimeChanged(minBeginTime);
-
-    /* Update maximum end time */
-    double maxEndTime = TrajUtills::getMaxEndTime(m_trajs);
-    emit trajMaxEndTimeChanged(maxEndTime);
-
-    /* Update minimal time step */
-    double minTimeStep = TrajUtills::getMinTimeStep(m_trajs);
-    emit trajMinTimeStepChanged(minTimeStep);
-}
-
-bool TrajPanel::checkIndex(int index)
-{
-    return index >= 0 && index < m_trajList->count();
+    m_traj->setColor(color);
+    emit trajUpdated();
 }

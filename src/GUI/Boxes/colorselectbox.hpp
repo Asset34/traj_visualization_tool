@@ -3,7 +3,6 @@
 
 #include <QHBoxLayout>
 
-#include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
 
@@ -11,7 +10,9 @@
 #include <QPalette>
 #include <QColorDialog>
 
-class ColorSelectBox : public QGroupBox
+#include "abstractbox.hpp"
+
+class ColorSelectBox : public AbstractBox
 {
     Q_OBJECT
 
@@ -20,10 +21,8 @@ public:
                             const QColor &color = Qt::white,
                             QWidget *parent = nullptr);
 
-    QString getName() const;
-    void setName(const QString &name);
-
     const QColor &getColor() const;
+    void setColor(const QColor &color);
 
 private:
     QHBoxLayout *m_layout;
@@ -35,7 +34,7 @@ private:
     void setLabelColor();
 
 private slots:
-    void setColor();
+    void setColorFromDialog();
 
 signals:
     void colorChanged(const QColor &color);

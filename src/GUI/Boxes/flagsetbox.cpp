@@ -1,12 +1,8 @@
 #include "flagsetbox.hpp"
 
 FlagSetBox::FlagSetBox(const QString &name, bool state, QWidget *parent)
-    : QWidget(parent)
+    : SimpleAbstractBox(name, parent)
 {
-    /* Configurate label */
-    m_nameLabel = new QLabel(name);
-    m_nameLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-
     /* Configurate check box */
     m_flagCheckBox = new QCheckBox;
     m_flagCheckBox->setFixedWidth(20);
@@ -24,16 +20,6 @@ FlagSetBox::FlagSetBox(const QString &name, bool state, QWidget *parent)
 
     /* Set connections */
     connect(m_flagCheckBox, &QCheckBox::stateChanged, this, &FlagSetBox::stateChanged);
-}
-
-QString FlagSetBox::getName() const
-{
-    return m_nameLabel->text();
-}
-
-void FlagSetBox::setName(const QString &name)
-{
-    m_nameLabel->setText(name);
 }
 
 bool FlagSetBox::getState() const

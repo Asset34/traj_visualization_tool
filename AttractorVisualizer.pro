@@ -32,15 +32,18 @@ SOURCES += \
     src/GUI/Boxes/flagsetbox.cpp \
     src/GUI/Boxes/valueslidebox.cpp \
     src/GUI/Boxes/doublevalueslidebox.cpp \
-    src/GUI/Panels/trajpanel.cpp \
-    src/GUI/Boxes/valueoutputbox.cpp \
     src/GUI/Boxes/openfilebox.cpp \
     src/GUI/Boxes/colorselectbox.cpp \
     src/Opengl/traj.cpp \
     src/Opengl/trajscene.cpp \
-    src/GUI/Panels/trajsettingspanel.cpp \
     src/GUI/Windows/addtrajwindow.cpp \
-    src/GUI/Panels/scenepanel.cpp
+    src/GUI/Panels/scenepanel.cpp \
+    src/GUI/Boxes/textinputbox.cpp \
+    src/GUI/Boxes/outputbox.cpp \
+    src/GUI/Panels/trajcontrolpanel.cpp \
+    src/GUI/Boxes/abstractbox.cpp \
+    src/GUI/Boxes/simpleabstractbox.cpp \
+    src/GUI/Panels/trajpanel.cpp
 
 HEADERS += \
     src/GUI/Windows/mainwindow.hpp \
@@ -50,15 +53,18 @@ HEADERS += \
     src/GUI/Boxes/flagsetbox.hpp \
     src/GUI/Boxes/valueslidebox.hpp \
     src/GUI/Boxes/doublevalueslidebox.hpp \
-    src/GUI/Panels/trajpanel.hpp \
-    src/GUI/Boxes/valueoutputbox.hpp \
     src/GUI/Boxes/openfilebox.hpp \
     src/GUI/Boxes/colorselectbox.hpp \
     src/Opengl/traj.hpp \
     src/Opengl/trajscene.hpp \
-    src/GUI/Panels/trajsettingspanel.hpp \
     src/GUI/Windows/addtrajwindow.hpp \
-    src/GUI/Panels/scenepanel.hpp
+    src/GUI/Panels/scenepanel.hpp \
+    src/GUI/Boxes/textinputbox.hpp \
+    src/GUI/Boxes/outputbox.hpp \
+    src/GUI/Panels/trajcontrolpanel.hpp \
+    src/GUI/Boxes/abstractbox.hpp \
+    src/GUI/Boxes/simpleabstractbox.hpp \
+    src/GUI/Panels/trajpanel.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \

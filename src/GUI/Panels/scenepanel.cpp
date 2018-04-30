@@ -12,7 +12,7 @@ ScenePanel::ScenePanel(QWidget *parent)
     m_layout->addWidget(m_colorBox);
 
     /* Configurate widget */
-    setTitle("Scene");
+    setTitle("Scene settings");
     setContentsMargins(5, 15, 5, 5);
     setFixedWidth(150);
     setFixedHeight(70);

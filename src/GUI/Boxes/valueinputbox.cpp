@@ -1,12 +1,8 @@
 #include "valueinputbox.hpp"
 
 ValueInputBox::ValueInputBox(const QString &name, QWidget *parent)
-    : QWidget(parent)
+    : SimpleAbstractBox(name, parent)
 {
-    /* Configurate label */
-    m_nameLabel = new QLabel(name);
-    m_nameLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-
     /* Configurate spin box */
     m_valueSpinBox = new QSpinBox;
     m_valueSpinBox->setFixedWidth(60);
@@ -24,16 +20,6 @@ ValueInputBox::ValueInputBox(const QString &name, QWidget *parent)
     /* Set connections */
     connect(m_valueSpinBox, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
             this, &ValueInputBox::valueChanged);
-}
-
-QString ValueInputBox::getName() const
-{
-    return m_nameLabel->text();
-}
-
-void ValueInputBox::setName(const QString &name)
-{
-    m_nameLabel->setText(name);
 }
 
 int ValueInputBox::getValue() const

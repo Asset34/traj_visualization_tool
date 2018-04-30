@@ -1,6 +1,7 @@
 #include "traj.hpp"
 
-Traj::Traj(double timeBegin,
+Traj::Traj(const QString &name,
+           double timeBegin,
            double timeEnd,
            int pointPerSec,
            bool displayStatus,
@@ -9,6 +10,7 @@ Traj::Traj(double timeBegin,
       m_timeEnd(timeEnd),
       m_pointPerSec(pointPerSec),
       m_displayStatus(displayStatus),
+      m_name(name),
       m_color(color)
 {
 }
@@ -82,6 +84,11 @@ void Traj::setDisplayStatus(Qt::CheckState state)
     }
 }
 
+const QString &Traj::getName() const
+{
+    return m_name;
+}
+
 const QColor &Traj::getColor() const
 {
     return m_color;
@@ -90,11 +97,6 @@ const QColor &Traj::getColor() const
 void Traj::setColor(const QColor &color)
 {
     m_color = color;
-}
-
-const QVector3D &Traj::getInitials() const
-{
-    return m_data.first();
 }
 
 QVector3D Traj::getAverage() const
@@ -130,7 +132,7 @@ void Traj::add(float x, float y, float z)
     m_data.push_back(QVector3D(x, y, z));
 }
 
-Traj *TrajUtills::readTraj(const QString &path)
+Traj *TrajUtills::readTraj(const QString &name, const QString &path)
 {
     QFile file(path);
     if (!file.exists()) {
@@ -146,7 +148,7 @@ Traj *TrajUtills::readTraj(const QString &path)
         double pointsPerSec = stream.readLine().toDouble();
 
         /* Read and set traj data */
-        Traj *traj = new Traj(timeBegin, timeEnd, pointsPerSec);
+        Traj *traj = new Traj(name, timeBegin, timeEnd, pointsPerSec);
 
         QStringList values;
         while (!stream.atEnd()) {
