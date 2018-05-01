@@ -43,7 +43,9 @@ SOURCES += \
     src/GUI/Panels/trajcontrolpanel.cpp \
     src/GUI/Boxes/abstractbox.cpp \
     src/GUI/Boxes/simpleabstractbox.cpp \
-    src/GUI/Panels/trajpanel.cpp
+    src/GUI/Panels/trajpanel.cpp \
+    src/Opengl/section.cpp \
+    src/Opengl/geometry.cpp
 
 HEADERS += \
     src/GUI/Windows/mainwindow.hpp \
@@ -64,7 +66,9 @@ HEADERS += \
     src/GUI/Panels/trajcontrolpanel.hpp \
     src/GUI/Boxes/abstractbox.hpp \
     src/GUI/Boxes/simpleabstractbox.hpp \
-    src/GUI/Panels/trajpanel.hpp
+    src/GUI/Panels/trajpanel.hpp \
+    src/Opengl/section.hpp \
+    src/Opengl/geometry.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \
