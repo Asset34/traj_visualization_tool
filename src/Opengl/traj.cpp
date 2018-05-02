@@ -135,23 +135,7 @@ void Traj::setData()
     /* Create vectors */
     QList<QVector3D> vectors;
     for (int i = 1; i < sections.count(); i++) {
-        for (int j = 1; j < sections[i].getCount(); j++) {
-            vectors.push_back(sections[i][j]);
-            vectors.push_back(sections[i][j - 1]);
-            vectors.push_back(sections[i - 1][j - 1]);
-            vectors.push_back(sections[i - 1][j]);
-        }
-        vectors.push_back(sections[i][0]);
-        vectors.push_back(sections[i][sections[i].getCount() - 1]);
-        vectors.push_back(sections[i - 1][sections[i].getCount() - 1]);
-        vectors.push_back(sections[i - 1][0]);
-    }
-
-    /* Create final data */
-    for (int i = 0; i < vectors.count(); i++) {
-        m_data.push_back(vectors[i].x());
-        m_data.push_back(vectors[i].y());
-        m_data.push_back(vectors[i].z());
+        addQuads(sections[i], sections[i - 1]);
     }
 }
 
@@ -163,6 +147,37 @@ void Traj::setAverage()
     }
 
     m_average = sum / m_trajData.count();
+}
+
+void Traj::addQuads(const Section &s1, const Section &s2)
+{
+    for (int i = 1; i < s2.getCount(); i++) {
+        addQuad(s2[i], s2[i - 1], s1[i - 1], s1[i]);
+    }
+    addQuad(s2.getFirst(), s2.getLast(), s1.getLast(), s1.getFirst());
+}
+
+void Traj::addQuad(const QVector3D &vec1, const QVector3D &vec2, const QVector3D &vec3, const QVector3D &vec4)
+{
+    /* Compute normal */
+    QVector3D normal = QVector3D::crossProduct(vec2 - vec1, vec4 - vec1).normalized();
+
+    /* Add data */
+    addVector(vec1);
+    addVector(normal);
+    addVector(vec2);
+    addVector(normal);
+    addVector(vec3);
+    addVector(normal);
+    addVector(vec4);
+    addVector(normal);
+}
+
+void Traj::addVector(const QVector3D &vec)
+{
+    m_data.push_back(vec.x());
+    m_data.push_back(vec.y());
+    m_data.push_back(vec.z());
 }
 
 namespace TrajUtills {

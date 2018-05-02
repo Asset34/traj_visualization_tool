@@ -11,7 +11,7 @@ TrajBuffer::TrajBuffer(Traj *traj)
         m_vbo.create();
         m_vbo.bind();
         m_vbo.allocate(traj->getConstData(), traj->getCount() * sizeof(GLfloat));
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
         glEnableVertexAttribArray(0);
     m_vao.release();
 }

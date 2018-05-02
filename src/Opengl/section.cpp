@@ -48,6 +48,16 @@ int Section::getCount() const
     return m_data.count();
 }
 
+const QVector3D &Section::getFirst() const
+{
+    return m_data.first();
+}
+
+const QVector3D &Section::getLast() const
+{
+    return m_data.last();
+}
+
 void Section::updateCoord(const QVector3D &coord)
 {
     QVector3D displacementVec = coord - m_coord;

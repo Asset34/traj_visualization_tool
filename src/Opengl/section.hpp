@@ -17,6 +17,9 @@ public:
 
     int getCount() const;
 
+    const QVector3D &getFirst() const;
+    const QVector3D &getLast() const;
+
     void setCoord(const QVector3D &coord);
     void setNormal(const QVector3D &normal);
     void setPlane(const QVector3D &coord, const QVector3D &normal);

@@ -51,6 +51,10 @@ private:
 
     void setData();
     void setAverage();
+
+    void addQuads(const Section &s1, const Section &s2);
+    void addQuad(const QVector3D &vec1, const QVector3D &vec2, const QVector3D &vec3, const QVector3D &vec4);
+    void addVector(const QVector3D &vec);
 };
 
 namespace TrajUtills {
