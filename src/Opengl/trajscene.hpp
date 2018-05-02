@@ -88,8 +88,13 @@ private:
     QMatrix4x4 m_proj;
 
     /* Locations */
-    int m_transformLoc;
-    int m_colorLoc;
+    int m_modelLoc;
+    int m_viewLoc;
+    int m_projectionLoc;
+    int m_objectColorLoc;
+    int m_lightColorLoc;
+    int m_lightPosLoc;
+    int m_viewPosLoc;
 
     /* Data buffers */
     QList<TrajBuffer*> m_buffers;

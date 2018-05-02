@@ -18,6 +18,7 @@ public:
     void zoom(float factor);
 
     const QVector3D &getCenter() const;
+    QVector3D getPosition() const;
 
     QMatrix4x4 getViewMatrix() const;
 
@@ -27,7 +28,7 @@ private:
     QVector3D m_center;
     QVector3D m_up;
 
-    /* Rotate vectors */
+    /* Rotation vectors */
     QVector3D m_yawVector;
     QVector3D m_pitchVector;
 

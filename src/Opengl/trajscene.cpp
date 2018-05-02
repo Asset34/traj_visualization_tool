@@ -13,6 +13,8 @@ TrajBuffer::TrajBuffer(Traj *traj)
         m_vbo.allocate(traj->getConstData(), traj->getCount() * sizeof(GLfloat));
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
         glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+        glEnableVertexAttribArray(1);
     m_vao.release();
 }
 
@@ -122,13 +124,19 @@ void TrajScene::initializeGL()
     /* Create shader program */
     m_shprogram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl");
     m_shprogram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fshader.glsl");
-    m_shprogram.bindAttributeLocation("position", 0);
+    m_shprogram.bindAttributeLocation("pos", 0);
+    m_shprogram.bindAttributeLocation("normal", 1);
     m_shprogram.link();
 
     /* Get locations */
     m_shprogram.bind();
-        m_transformLoc = m_shprogram.uniformLocation("transform");
-        m_colorLoc = m_shprogram.uniformLocation("color");
+        m_modelLoc = m_shprogram.uniformLocation("model");
+        m_viewLoc = m_shprogram.uniformLocation("view");
+        m_projectionLoc = m_shprogram.uniformLocation("projection");
+        m_objectColorLoc = m_shprogram.uniformLocation("objectColor");
+        m_lightColorLoc = m_shprogram.uniformLocation("lightColor");
+        m_lightPosLoc = m_shprogram.uniformLocation("lightPos");
+        m_viewPosLoc = m_shprogram.uniformLocation("viewPos");
     m_shprogram.release();
 }
 
@@ -147,13 +155,19 @@ void TrajScene::paintGL()
     m_model.setToIdentity();
 
     /* Draw scene */
-    m_shprogram.bind();
-    m_shprogram.setUniformValue(m_transformLoc, m_proj * m_camera.getViewMatrix() *  m_model);
+    m_shprogram.bind();   
+        m_shprogram.setUniformValue(m_modelLoc, m_model);
+        m_shprogram.setUniformValue(m_viewLoc, m_camera.getViewMatrix());
+        m_shprogram.setUniformValue(m_projectionLoc, m_proj);
+
+        m_shprogram.setUniformValue(m_lightColorLoc, QVector3D(1.0, 1.0, 1.0));
+        m_shprogram.setUniformValue(m_lightPosLoc, QVector3D(0.0, 0.0, 10.0));
+        m_shprogram.setUniformValue(m_viewPosLoc, m_camera.getPosition());
+
         for (int i = 0; i < m_buffers.count(); i++) {
             if (m_buffers[i]->getDisplayStatus()) {
                 m_buffers[i]->bind();
-                    m_shprogram.setUniformValue(m_colorLoc, m_buffers[i]->getColor());
-                    //qDebug() << m_buffers[i]->getVertexCount(m_currentTime);
+                    m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getColor());
                     glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
                 m_buffers[i]->release();
             }

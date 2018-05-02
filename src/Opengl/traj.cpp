@@ -135,7 +135,7 @@ void Traj::setData()
     /* Create vectors */
     QList<QVector3D> vectors;
     for (int i = 1; i < sections.count(); i++) {
-        addQuads(sections[i], sections[i - 1]);
+        addQuads(sections[i - 1], sections[i]);
     }
 }
 

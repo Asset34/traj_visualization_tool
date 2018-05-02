@@ -14,6 +14,11 @@ const QVector3D &Camera::getCenter() const
     return m_center;
 }
 
+QVector3D Camera::getPosition() const
+{
+    return m_center + m_front;
+}
+
 void Camera::moveCenter(const QVector3D &center)
 {
     m_center = center;
