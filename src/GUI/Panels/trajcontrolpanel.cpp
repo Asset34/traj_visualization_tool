@@ -53,23 +53,23 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     connect(m_deleteButton, &QPushButton::clicked, this, &TrajControlPanel::deleteTraj);
     connect(m_selectButton, &QPushButton::clicked, this, &TrajControlPanel::selectTraj);
     connect(m_focusButton, &QPushButton::clicked, this, &TrajControlPanel::focusTraj);
-    connect(m_trajList, &QListWidget::itemChanged, this, &TrajControlPanel::setTrajDisplayStatus);
+    connect(m_trajList, &QListWidget::itemChanged, this, &TrajControlPanel::setTrajDisplay);
     connect(m_trajList, &QListWidget::itemDoubleClicked, this, &TrajControlPanel::selectTraj);
 }
 
 void TrajControlPanel::updateGeneralTimeValues()
 {
-    /* Update minimal begin time */
-    double minBeginTime = TrajUtills::getMinBeginTime(m_trajs);
-    emit minBeginTimeChanged(minBeginTime);
+    /* Update general begin time */
+    double generalBegin = TrajUtills::generalBeginTime(m_trajs);
+    emit generalBeginTimeChanged(generalBegin);
 
-    /* Update maximum end time */
-    double maxEndTime = TrajUtills::getMaxEndTime(m_trajs);
-    emit maxEndTimeChanged(maxEndTime);
+    /* Update general end time */
+    double generalEnd = TrajUtills::generalEndTime(m_trajs);
+    emit generalEndTimeChanged(generalEnd);
 
-    /* Update minimal time step */
-    double minTimeStep = TrajUtills::getMinTimeStep(m_trajs);
-    emit minTimeStepChanged(minTimeStep);
+    /* Update general time step */
+    double generalStep = TrajUtills::generalTimeStep(m_trajs);
+    emit generalTimeStepChanged(generalStep);
 }
 
 bool TrajControlPanel::checkIndex(int index) const
@@ -100,17 +100,17 @@ void TrajControlPanel::addTraj()
         m_trajs.push_back(traj);
 
         /* Add traj to list widget */
-        QListWidgetItem *item = new QListWidgetItem(traj->getName(), m_trajList);
+        QListWidgetItem *item = new QListWidgetItem("test", m_trajList);
         item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
         item->setCheckState(Qt::Checked);
 
         /* Notify about current state */
         if (checkFirst()) {
             emit firstTrajWasAdded(traj);
+            emit trajFocused(traj);
         }
         updateGeneralTimeValues();
 
-        emit trajFocused(traj);
         emit trajAdded(traj);
     }
 }
@@ -118,7 +118,6 @@ void TrajControlPanel::addTraj()
 void TrajControlPanel::deleteTraj()
 {
     int row = m_trajList->currentRow();
-
     if (checkIndex(row)) {
         /* Delete traj */
         m_trajs.removeAt(row);
@@ -141,7 +140,6 @@ void TrajControlPanel::deleteTraj()
 void TrajControlPanel::selectTraj()
 {
     int row = m_trajList->currentRow();
-
     if (checkIndex(row)) {
         emit trajSelected(m_trajs.at(row));
     }
@@ -150,18 +148,16 @@ void TrajControlPanel::selectTraj()
 void TrajControlPanel::focusTraj()
 {
     int row = m_trajList->currentRow();
-
     if (checkIndex(row)) {
         emit trajFocused(m_trajs.at(row));
     }
 }
 
-void TrajControlPanel::setTrajDisplayStatus(QListWidgetItem *item)
+void TrajControlPanel::setTrajDisplay(QListWidgetItem *item)
 {
     int row = m_trajList->row(item);
     Qt::CheckState status = item->checkState();
 
-    m_trajs.at(row)->setDisplayStatus(status);
-
-    emit trajDisplayStatusChanged();
+    m_trajs.at(row)->setDisplayed(status);
+    emit trajDisplayChanged();
 }

@@ -46,19 +46,17 @@ private slots:
     void deleteTraj();
     void selectTraj();
     void focusTraj();
-    void setTrajDisplayStatus(QListWidgetItem *item);
+    void setTrajDisplay(QListWidgetItem *item);
 
 signals:
     void trajAdded(Traj *ptraj);
     void trajDeleted(int pos);
     void trajFocused(Traj *traj);
     void trajSelected(Traj *traj);
-    void trajDisplayStatusChanged();
-
-    void minBeginTimeChanged(double time);
-    void maxEndTimeChanged(double time);
-    void minTimeStepChanged(double step);
-
+    void trajDisplayChanged();
+    void generalBeginTimeChanged(double time);
+    void generalEndTimeChanged(double time);
+    void generalTimeStepChanged(double step);
     void firstTrajWasAdded(Traj *traj);
     void allTrajWasDeleted();
 };

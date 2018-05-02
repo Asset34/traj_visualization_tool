@@ -1,20 +1,16 @@
 #include "trajscene.hpp"
 
 TrajBuffer::TrajBuffer(Traj *traj)
-    : m_traj(traj),
-      m_sceneData(nullptr)
+    : m_traj(traj)
 {
     initializeOpenGLFunctions();
-
-    /* Get scene data */
-    m_sceneData = traj->getOpenglData();
 
     /* Create VAO with VBO */
     m_vao.create();
     m_vao.bind();
         m_vbo.create();
         m_vbo.bind();
-        m_vbo.allocate(m_sceneData, traj->getDataCount() * sizeof(GLfloat));
+        m_vbo.allocate(traj->getConstData(), traj->getCount() * sizeof(GLfloat));
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
         glEnableVertexAttribArray(0);
     m_vao.release();
@@ -23,7 +19,6 @@ TrajBuffer::TrajBuffer(Traj *traj)
 TrajBuffer::~TrajBuffer()
 {
     delete m_traj;
-    delete m_sceneData;
 
     m_vbo.destroy();
     m_vao.destroy();
@@ -47,7 +42,6 @@ Traj *TrajBuffer::getTraj() const
 QVector3D TrajBuffer::getColor() const
 {
     QColor color = m_traj->getColor();
-
     return QVector3D(color.redF(), color.greenF(), color.blueF());
 }
 
@@ -63,7 +57,7 @@ int TrajBuffer::getVertexCount(double time) const
 
 bool TrajBuffer::getDisplayStatus() const
 {
-    return m_traj->getDisplayStatus();
+    return m_traj->isDisplayed();
 }
 
 
@@ -80,21 +74,21 @@ TrajScene::TrajScene(QWidget *parent)
 
 TrajScene::~TrajScene()
 {
-    for (auto it = m_trajBuffers.constBegin(); it != m_trajBuffers.constEnd(); ++it) {
-        delete *it;
+    for (int i = 0; i < m_buffers.count(); i++) {
+        delete m_buffers[i];
     }
 }
 
 void TrajScene::addTraj(Traj *traj)
 {
     makeCurrent();
-    m_trajBuffers.push_back(new TrajBuffer(traj));
+    m_buffers.push_back(new TrajBuffer(traj));
     update();
 }
 
 void TrajScene::deleteTraj(int pos)
 {
-    m_trajBuffers.removeAt(pos);
+    m_buffers.removeAt(pos);
     update();
 }
 
@@ -154,15 +148,17 @@ void TrajScene::paintGL()
 
     /* Draw scene */
     m_shprogram.bind();
-        m_shprogram.setUniformValue(m_transformLoc, m_proj * m_camera.getViewMatrix() *  m_model);
-        for (auto it = m_trajBuffers.begin(); it != m_trajBuffers.end(); ++it) {
-            if ((*it)->getDisplayStatus()) {
-                (*it)->bind();
-                    m_shprogram.setUniformValue(m_colorLoc, (*it)->getColor());
-                    glDrawArrays(GL_LINE_STRIP, 0, (*it)->getVertexCount(m_currentTime));
-                (*it)->release();
+    m_shprogram.setUniformValue(m_transformLoc, m_proj * m_camera.getViewMatrix() *  m_model);
+        for (int i = 0; i < m_buffers.count(); i++) {
+            if (m_buffers[i]->getDisplayStatus()) {
+                m_buffers[i]->bind();
+                    m_shprogram.setUniformValue(m_colorLoc, m_buffers[i]->getColor());
+                    //qDebug() << m_buffers[i]->getVertexCount(m_currentTime);
+                    glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
+                m_buffers[i]->release();
             }
         }
+
     m_shprogram.release();
 }
 

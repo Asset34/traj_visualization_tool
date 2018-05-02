@@ -37,8 +37,6 @@ private:
     Traj *m_traj;
     QOpenGLBuffer m_vbo;
     QOpenGLVertexArrayObject m_vao;
-
-    GLfloat *m_sceneData;
 };
 
 
@@ -55,9 +53,7 @@ public slots:
     void addTraj(Traj *traj);
     void deleteTraj(int pos);
     void focusTraj(Traj *traj);
-
     void setCurrentTime(double time);
-
     void setBackgroundColor(const QColor &color);
 
 protected:
@@ -96,7 +92,7 @@ private:
     int m_colorLoc;
 
     /* Data buffers */
-    QList<TrajBuffer*> m_trajBuffers;
+    QList<TrajBuffer*> m_buffers;
 };
 
 #endif // OGLATTRACTOR_HPP

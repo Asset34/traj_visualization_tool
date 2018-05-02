@@ -7,9 +7,14 @@ AddTrajWindow::AddTrajWindow(QWidget *parent)
     m_nameBox = new TextInputBox("Name");
 
     /* Configurate path box */
-    m_pathBox = new OpenFileBox("Data",
+    m_pathBox = new OpenFileBox("Trajectory",
                                 "D:/Study/6th_Semester/Geometric_Modeling/CW/AttractorVisualizer/data",
                                 "Text data( *.txt )");
+
+    /* Configurate path section box */
+    m_pathSectionBox = new OpenFileBox("Section",
+                                       "D:/Study/6th_Semester/Geometric_Modeling/CW/AttractorVisualizer/data",
+                                       "Text data( *.txt )");
 
     /* Configurate ok button */
     m_okButton = new QPushButton("Ok");
@@ -26,6 +31,7 @@ AddTrajWindow::AddTrajWindow(QWidget *parent)
     m_inputLayout->setMargin(0);
     m_inputLayout->addWidget(m_nameBox);
     m_inputLayout->addWidget(m_pathBox);
+    m_inputLayout->addWidget(m_pathSectionBox);
     m_inputLayout->addStretch(1);
 
     /* Configurate buttons layout */
@@ -43,7 +49,7 @@ AddTrajWindow::AddTrajWindow(QWidget *parent)
 
     /* Configurate dialog */
     setLayout(m_mainLayout);
-    setFixedHeight(90);
+    setFixedHeight(140);
     setFixedWidth(300);
     setContentsMargins(5, 5, 5, 5);
 
@@ -54,8 +60,21 @@ AddTrajWindow::AddTrajWindow(QWidget *parent)
 
 Traj *AddTrajWindow::getTraj() const
 {
-    /* Load traj */
-    Traj *traj = TrajUtills::readTraj(m_nameBox->getText(), m_pathBox->getPath());
+    /* Load section */
+    QFile file1(m_pathSectionBox->getPath());
+    file1.open(QFile::ReadOnly);
+    QTextStream stream1(&file1);
+    Section section(stream1);
+
+    /* Load trajectory */
+    QFile file2(m_pathBox->getPath());
+    file2.open(QFile::ReadOnly);
+    QTextStream stream2(&file2);
+    Traj *traj = new Traj(stream2, section);
+
+    /* Set default trajectory parameters */
+    traj->setDisplayed(true);
+    traj->setColor(Qt::black);
 
     return traj;
 }

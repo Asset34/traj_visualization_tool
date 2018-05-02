@@ -29,6 +29,9 @@ private:
     QVBoxLayout *m_buttonsLayout;
     TextInputBox *m_nameBox;
     OpenFileBox *m_pathBox;
+
+    OpenFileBox *m_pathSectionBox;
+
     QPushButton *m_okButton;
     QPushButton *m_cancelButton;
 };

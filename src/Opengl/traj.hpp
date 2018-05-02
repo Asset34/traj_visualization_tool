@@ -1,75 +1,64 @@
 #ifndef PTRAJ_HPP
 #define PTRAJ_HPP
 
+#include <QTextStream>
+#include <QVector>
+#include <QVector3D>
 #include <QColor>
 
-#include <QVector3D>
-#include <QList>
-
-#include <QFile>
-#include <QTextStream>
-
-#include <QDebug>
-
 #include "qopengl.h"
+#include "section.hpp"
 
 class Traj
 {
 public:
-    explicit Traj(const QString &name,
-                  double timeBegin,
-                  double timeEnd,
-                  int pointPerSec,
-                  bool displayStatus = true,
-                  const QColor &color = Qt::white);
+    Traj(QTextStream &stream, const Section &section);
 
-    const QVector3D &get(double time) const;
+    int getTrajVertexCount() const;
+    int getVertexCount() const;
+    int getVertexCount(double time) const;
+    int getCount() const;
+    int getCount(double time) const;
 
     double getBeginTime() const;
     double getEndTime() const;
     double getTimeStep() const;
 
-    int getDataCount() const;
-    int getDataCount(double time) const;
-    int getVertexCount() const;
-    int getVertexCount(double time) const;
-
-    bool getDisplayStatus() const;
-    void setDisplayStatus(bool status);
-    void setDisplayStatus(Qt::CheckState state);
-
-    const QString &getName() const;
+    const QVector3D &getAverage() const;
+    const GLfloat *getConstData() const;
 
     const QColor &getColor() const;
     void setColor(const QColor &color);
 
-    QVector3D getAverage() const;
+    bool isDisplayed() const;
+    void setDisplayed(bool flag);
+    void setDisplayed(Qt::CheckState state);
 
-    GLfloat *getOpenglData() const;
-
-    void add(float x, float y, float z);
+    void setSection(const Section &section);
 
 private:
     double m_timeBegin;
     double m_timeEnd;
-    int m_pointPerSec;
-    bool m_displayStatus;
+    int m_valPerSec;
 
-    QString m_name;
+    bool m_displayFlag;
     QColor m_color;
+    QVector3D m_average;
 
-    QList<QVector3D> m_data;
+    Section m_section;
+    QVector<QVector3D> m_trajData;
+    QVector<GLfloat> m_data;
 
+    void setData();
+    void setAverage();
 };
 
 namespace TrajUtills {
 
-Traj *readTraj(const QString &name, const QString &path);
-double getMinBeginTime(const QList<Traj*> &trajList);
-double getMaxEndTime(const QList<Traj*> &trajList);
-double getMinTimeStep(const QList<Traj*> &trajList);
+double generalBeginTime(const QList<Traj*> &trajs);
+double generalEndTime(const QList<Traj*> &trajs);
+double generalTimeStep(const QList<Traj*> &trajs);
 
 } // TrajUtills
-
 
 #endif // PTRAJ_HPP

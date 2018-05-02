@@ -48,17 +48,17 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("Attractor Visualizer");
     setContentsMargins(5, 15, 5, 5);
     setLayout(m_mainLayout);
-    resize(800, 500);
+    resize(600, 400);
 
     /* Set connections */
     connect(m_trajControlPanel, &TrajControlPanel::trajAdded, m_scene, &TrajScene::addTraj);
     connect(m_trajControlPanel, &TrajControlPanel::trajDeleted, m_scene, &TrajScene::deleteTraj);
     connect(m_trajControlPanel, &TrajControlPanel::trajFocused, m_scene, &TrajScene::focusTraj);
-    connect(m_trajControlPanel, &TrajControlPanel::trajDisplayStatusChanged, m_scene, static_cast<void (TrajScene::*)()>(&TrajScene::update));
-    connect(m_trajControlPanel, &TrajControlPanel::minBeginTimeChanged, m_timeBox, &DoubleValueSlideBox::setMinimum);
-    connect(m_trajControlPanel, &TrajControlPanel::maxEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setMaximum);
-    connect(m_trajControlPanel, &TrajControlPanel::maxEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setValue);
-    connect(m_trajControlPanel, &TrajControlPanel::minTimeStepChanged, m_timeBox, &DoubleValueSlideBox::setStep);
+    connect(m_trajControlPanel, &TrajControlPanel::trajDisplayChanged, m_scene, static_cast<void (TrajScene::*)()>(&TrajScene::update));
+    connect(m_trajControlPanel, &TrajControlPanel::generalBeginTimeChanged, m_timeBox, &DoubleValueSlideBox::setMinimum);
+    connect(m_trajControlPanel, &TrajControlPanel::generalEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setMaximum);
+    connect(m_trajControlPanel, &TrajControlPanel::generalEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setValue);
+    connect(m_trajControlPanel, &TrajControlPanel::generalTimeStepChanged, m_timeBox, &DoubleValueSlideBox::setStep);
     connect(m_trajControlPanel, &TrajControlPanel::firstTrajWasAdded, m_timeBox, &DoubleValueSlideBox::enable);
     connect(m_trajControlPanel, &TrajControlPanel::allTrajWasDeleted, m_timeBox, &DoubleValueSlideBox::disable);
     connect(m_trajControlPanel, &TrajControlPanel::trajSelected, m_trajPanel, &TrajPanel::setTraj);

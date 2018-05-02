@@ -29,7 +29,6 @@ void TrajPanel::setTraj(Traj *traj)
     m_traj = traj;
 
     /* Set current parameters */
-    m_nameBox->setText(m_traj->getName());
     m_colorBox->setColor(m_traj->getColor());
 }
 

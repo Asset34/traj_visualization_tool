@@ -1,25 +1,52 @@
 #include "traj.hpp"
 
-Traj::Traj(const QString &name,
-           double timeBegin,
-           double timeEnd,
-           int pointPerSec,
-           bool displayStatus,
-           const QColor &color)
-    : m_timeBegin(timeBegin),
-      m_timeEnd(timeEnd),
-      m_pointPerSec(pointPerSec),
-      m_displayStatus(displayStatus),
-      m_name(name),
-      m_color(color)
+Traj::Traj(QTextStream &stream, const Section &section)
+    : m_section(section)
 {
+    /* Load trajectory time values */
+    m_timeBegin = stream.readLine().toDouble();
+    m_timeEnd = stream.readLine().toDouble();
+    m_valPerSec = stream.readLine().toDouble();
+
+    /* Load trajectory data */
+    int trajDataSize = (m_timeEnd - m_timeBegin) * m_valPerSec + 1;
+    m_trajData.reserve(trajDataSize);
+    QStringList values;
+    while (!stream.atEnd()) {
+        values = stream.readLine().split(',');
+
+        m_trajData.push_back({values.at(0).toFloat(),
+                              values.at(1).toFloat(),
+                              values.at(2).toFloat()});
+    }
+
+    setAverage();
+    setData();
 }
 
-const QVector3D &Traj::get(double time) const
+int Traj::getTrajVertexCount() const
 {
-    int pos = time * m_pointPerSec;
+    return m_trajData.count();
+}
 
-    return m_data.at(pos);
+int Traj::getVertexCount() const
+{
+    return getCount() / 3;
+}
+
+int Traj::getVertexCount(double time) const
+{
+    return (time - m_timeBegin) * m_valPerSec * m_section.getCount() * 4;
+}
+
+int Traj::getCount() const
+{
+    return m_data.count();
+}
+
+int Traj::getCount(double time) const
+{
+    return getVertexCount(time) * 3;
 }
 
 double Traj::getBeginTime() const
@@ -34,59 +61,7 @@ double Traj::getEndTime() const
 
 double Traj::getTimeStep() const
 {
-    return 1.0 / m_pointPerSec;
-}
-
-int Traj::getDataCount() const
-{
-    return 3 * getVertexCount();
-}
-
-int Traj::getDataCount(double time) const
-{
-    return 3 * getVertexCount(time);
-}
-
-int Traj::getVertexCount() const
-{
-    return m_data.count();
-}
-
-int Traj::getVertexCount(double time) const
-{
-    if (time < m_timeBegin) {
-        time = m_timeBegin;
-    }
-    else if (time > m_timeEnd) {
-        time = m_timeEnd;
-    }
-
-    return (time - m_timeBegin) * m_pointPerSec;
-}
-
-bool Traj::getDisplayStatus() const
-{
-    return m_displayStatus;
-}
-
-void Traj::setDisplayStatus(bool status)
-{
-    m_displayStatus = status;
-}
-
-void Traj::setDisplayStatus(Qt::CheckState state)
-{
-    if (state == Qt::Checked) {
-        m_displayStatus = true;
-    }
-    else {
-        m_displayStatus = false;
-    }
-}
-
-const QString &Traj::getName() const
-{
-    return m_name;
+    return 1.0 / m_valPerSec;
 }
 
 const QColor &Traj::getColor() const
@@ -97,127 +72,138 @@ const QColor &Traj::getColor() const
 void Traj::setColor(const QColor &color)
 {
     m_color = color;
+    setData();
 }
 
-QVector3D Traj::getAverage() const
+bool Traj::isDisplayed() const
 {
-    double sx = 0, sy = 0, sz = 0;
-    for (auto it = m_data.constBegin(); it != m_data.constEnd(); ++it) {
-        sx += (*it).x();
-        sy += (*it).y();
-        sz += (*it).z();
-    }
-
-    return QVector3D(sx / m_data.count(),
-                     sy / m_data.count(),
-                     sz / m_data.count());
+    return m_displayFlag;
 }
 
-GLfloat *Traj::getOpenglData() const
+void Traj::setDisplayed(bool flag)
 {
-    GLfloat *openglData = new GLfloat[getDataCount()];
-
-    int i = 0;
-    for (auto it = m_data.constBegin(); it != m_data.constEnd(); ++it) {
-        openglData[i++] = (*it).x();
-        openglData[i++] = (*it).y();
-        openglData[i++] = (*it).z();
-    }
-
-    return openglData;
+    m_displayFlag = flag;
 }
 
-void Traj::add(float x, float y, float z)
+void Traj::setDisplayed(Qt::CheckState state)
 {
-    m_data.push_back(QVector3D(x, y, z));
-}
-
-Traj *TrajUtills::readTraj(const QString &name, const QString &path)
-{
-    QFile file(path);
-    if (!file.exists()) {
-        qDebug() << "Cannot find " << file.fileName();
-    }
-
-    if (file.open(QIODevice::ReadOnly)) {
-        QTextStream stream(&file);
-
-        /* Read traj info */
-        double timeBegin = stream.readLine().toDouble();
-        double timeEnd = stream.readLine().toDouble();
-        double pointsPerSec = stream.readLine().toDouble();
-
-        /* Read and set traj data */
-        Traj *traj = new Traj(name, timeBegin, timeEnd, pointsPerSec);
-
-        QStringList values;
-        while (!stream.atEnd()) {
-            values = stream.readLine().split(',');
-
-            traj->add(values.at(0).toFloat(),
-                      values.at(1).toFloat(),
-                      values.at(2).toFloat());
-        }
-
-        file.close();
-
-        if (stream.status() == QTextStream::Ok) {
-            qDebug() << "The trajectory was successfully loaded from " << file.fileName();
-
-            return traj;
-        }
-        else {
-            qDebug() << "The tracjection was not loaded from" << file.fileName();
-        }
+    if (state == Qt::Checked) {
+        m_displayFlag = true;
     }
     else {
-        qDebug() << "Cannot load trajectory from " << file.fileName();
+        m_displayFlag = false;
     }
-
-    return nullptr;
 }
 
-double TrajUtills::getMinBeginTime(const QList<Traj*> &trajList)
+const QVector3D &Traj::getAverage() const
 {
-    double min = trajList.first()->getBeginTime();
+    return m_average;
+}
 
-    double time;
-    for (auto it = trajList.constBegin(); it != trajList.constEnd(); ++it) {
-        time = (*it)->getBeginTime();
-        if (time < min) {
-            min = time;
+const GLfloat *Traj::getConstData() const
+{
+    return m_data.constData();
+}
+
+void Traj::setSection(const Section &section)
+{
+    m_section = section;
+}
+
+void Traj::setData()
+{
+    /* Reset data */
+    m_data.clear();
+    int size = (m_trajData.count() - 1) * m_section.getCount() * 4 * 3;
+    m_data.reserve(size);
+
+    /* Create normals */
+    QList<QVector3D> normals;
+    for (int i = 1; i < m_trajData.count(); i++) {
+        normals.push_back(m_trajData[i] - m_trajData[i - 1]);
+    }
+
+    /* Create sections */
+    QList<Section> sections;
+    for (int i = 0; i < normals.count(); i++) {
+        m_section.setPlane(m_trajData[i], normals[i]);
+        sections.push_back(m_section);
+    }
+    m_section.setPlane(m_trajData.last(), normals.last());
+    sections.push_back(m_section);
+
+    /* Create vectors */
+    QList<QVector3D> vectors;
+    for (int i = 1; i < sections.count(); i++) {
+        for (int j = 1; j < sections[i].getCount(); j++) {
+            vectors.push_back(sections[i][j]);
+            vectors.push_back(sections[i][j - 1]);
+            vectors.push_back(sections[i - 1][j - 1]);
+            vectors.push_back(sections[i - 1][j]);
+        }
+        vectors.push_back(sections[i][0]);
+        vectors.push_back(sections[i][sections[i].getCount() - 1]);
+        vectors.push_back(sections[i - 1][sections[i].getCount() - 1]);
+        vectors.push_back(sections[i - 1][0]);
+    }
+
+    /* Create final data */
+    for (int i = 0; i < vectors.count(); i++) {
+        m_data.push_back(vectors[i].x());
+        m_data.push_back(vectors[i].y());
+        m_data.push_back(vectors[i].z());
+    }
+}
+
+void Traj::setAverage()
+{
+    QVector3D sum = {0.0, 0.0, 0.0};
+    for (int i = 0; i < m_trajData.count(); i++) {
+        sum += m_trajData[i];
+    }
+
+    m_average = sum / m_trajData.count();
+}
+
+namespace TrajUtills {
+
+double generalBeginTime(const QList<Traj*> &trajs)
+{
+    double time = trajs.first()->getBeginTime();
+
+    for (int i = 1; i < trajs.count(); i++) {
+        if (trajs[i]->getBeginTime() < time) {
+            time = trajs[i]->getBeginTime();
         }
     }
 
-    return min;
+    return time;
 }
 
-double TrajUtills::getMaxEndTime(const QList<Traj*> &trajList)
+double generalEndTime(const QList<Traj*> &trajs)
 {
-    double max = trajList.first()->getEndTime();
+    double time = trajs.first()->getEndTime();
 
-    double time;
-    for (auto it = trajList.constBegin(); it != trajList.constEnd(); ++it) {
-        time = (*it)->getEndTime();
-        if (time > max) {
-            max = time;
+    for (int i = 1; i < trajs.count(); i++) {
+        if (trajs[i]->getEndTime() > time) {
+            time = trajs[i]->getEndTime();
         }
     }
 
-    return max;
+    return time;
 }
 
-double TrajUtills::getMinTimeStep(const QList<Traj *> &trajList)
+double generalTimeStep(const QList<Traj*> &trajs)
 {
-    double min = trajList.first()->getTimeStep();
+    double step = trajs.first()->getTimeStep();
 
-    double step;
-    for (auto it = trajList.constBegin(); it != trajList.constEnd(); ++it) {
-        step = (*it)->getTimeStep();
-        if (step < min) {
-            min = step;
+    for (int i = 1; i < trajs.count(); i++) {
+        if (trajs[i]->getTimeStep() < step) {
+            step = trajs[i]->getTimeStep();
         }
     }
 
-    return min;
+    return step;
 }
+
+} // TrajUtills
