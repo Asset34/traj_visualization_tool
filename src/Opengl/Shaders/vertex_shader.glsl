@@ -1,3 +1,5 @@
+#version 330
+
 in vec3 pos;
 in vec3 normal;
 
