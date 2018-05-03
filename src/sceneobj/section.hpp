@@ -33,7 +33,6 @@ private:
     QVector3D m_normal;
     QList<QVector3D> m_data;
 
-    void add(float x, float y);
     void updateCoord(const QVector3D &coord);
     void updateNormal(const QVector3D &normal);
 };
