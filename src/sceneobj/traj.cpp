@@ -1,7 +1,8 @@
 #include "traj.hpp"
 
-Traj::Traj(QTextStream &stream, const Section &section)
-    : m_section(section)
+Traj::Traj(const QString &name, QTextStream &stream, const Section &section)
+    : m_name(name),
+      m_section(section)
 {
     /* Load trajectory time values */
     m_timeBegin = stream.readLine().toDouble();
@@ -64,15 +65,46 @@ double Traj::getTimeStep() const
     return 1.0 / m_valPerSec;
 }
 
-const QColor &Traj::getColor() const
+const QString &Traj::getName() const
+{
+    return m_name;
+}
+
+void Traj::setName(const QString &name)
+{
+    m_name = name;
+}
+
+const QVector3D &Traj::getColorVector() const
 {
     return m_color;
 }
 
-void Traj::setColor(const QColor &color)
+QColor Traj::getColor() const
+{
+    QColor color;
+    color.setRedF(m_color.x());
+    color.setGreenF(m_color.y());
+    color.setBlueF(m_color.z());
+
+    return color;
+}
+
+void Traj::setColor(const QVector3D &color)
 {
     m_color = color;
-    setData();
+}
+
+void Traj::setColor(const QColor &color)
+{
+    m_color = {float(color.redF()),
+               float(color.greenF()),
+               float(color.blueF())};
+}
+
+const QVector3D &Traj::getAverage() const
+{
+    return m_average;
 }
 
 bool Traj::isDisplayed() const
@@ -95,19 +127,9 @@ void Traj::setDisplayed(Qt::CheckState state)
     }
 }
 
-const QVector3D &Traj::getAverage() const
-{
-    return m_average;
-}
-
 const GLfloat *Traj::getConstData() const
 {
     return m_data.constData();
-}
-
-void Traj::setSection(const Section &section)
-{
-    m_section = section;
 }
 
 void Traj::setData()

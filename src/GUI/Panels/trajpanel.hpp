@@ -5,9 +5,9 @@
 
 #include <QGroupBox>
 
-#include "../../Opengl/traj.hpp"
-#include "../Boxes/outputbox.hpp"
-#include "../Boxes/colorselectbox.hpp"
+#include "../boxes/outputbox.hpp"
+#include "../boxes/colorselectbox.hpp"
+#include "../../sceneobj/traj.hpp"
 
 class TrajPanel : public QGroupBox
 {

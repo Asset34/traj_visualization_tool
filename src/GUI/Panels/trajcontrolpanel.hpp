@@ -10,8 +10,8 @@
 
 #include <QVector3D>
 
-#include "../../Opengl/traj.hpp"
-#include "../Windows/addtrajwindow.hpp"
+#include "../windows/addtrajwindow.hpp"
+#include "../../sceneobj//traj.hpp"
 
 class TrajControlPanel : public QGroupBox
 {

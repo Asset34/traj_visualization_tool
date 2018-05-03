@@ -1,8 +1,8 @@
 #ifndef PTRAJ_HPP
 #define PTRAJ_HPP
 
-#include <QTextStream>
 #include <QVector>
+#include <QTextStream>
 #include <QVector3D>
 #include <QColor>
 
@@ -12,7 +12,7 @@
 class Traj
 {
 public:
-    Traj(QTextStream &stream, const Section &section);
+    Traj(const QString &name, QTextStream &stream, const Section &section);
 
     int getTrajVertexCount() const;
     int getVertexCount() const;
@@ -24,26 +24,32 @@ public:
     double getEndTime() const;
     double getTimeStep() const;
 
-    const QVector3D &getAverage() const;
-    const GLfloat *getConstData() const;
+    const QString &getName() const;
+    void setName(const QString &name);
 
-    const QColor &getColor() const;
+    const QVector3D &getColorVector() const;
+    QColor getColor() const;
+    void setColor(const QVector3D &color);
     void setColor(const QColor &color);
+
+    const QVector3D &getAverage() const;
 
     bool isDisplayed() const;
     void setDisplayed(bool flag);
     void setDisplayed(Qt::CheckState state);
 
-    void setSection(const Section &section);
+    const GLfloat *getConstData() const;
 
 private:
     double m_timeBegin;
     double m_timeEnd;
     int m_valPerSec;
 
-    bool m_displayFlag;
-    QColor m_color;
+    QString m_name;
+    QVector3D m_color;
     QVector3D m_average;
+
+    bool m_displayFlag;
 
     Section m_section;
     QVector<QVector3D> m_trajData;

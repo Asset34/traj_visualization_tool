@@ -10,9 +10,9 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include "../../Opengl/traj.hpp"
-#include "../Boxes/openfilebox.hpp"
-#include "../Boxes/textinputbox.hpp"
+#include "../boxes/openfilebox.hpp"
+#include "../boxes/textinputbox.hpp"
+#include "../../sceneobj/traj.hpp"
 
 class AddTrajWindow : public QDialog
 {
@@ -29,9 +29,7 @@ private:
     QVBoxLayout *m_buttonsLayout;
     TextInputBox *m_nameBox;
     OpenFileBox *m_pathBox;
-
     OpenFileBox *m_pathSectionBox;
-
     QPushButton *m_okButton;
     QPushButton *m_cancelButton;
 };

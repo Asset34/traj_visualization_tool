@@ -4,10 +4,11 @@ TrajPanel::TrajPanel(QWidget *parent)
     : QGroupBox(parent)
 {
     /* Configurate name box */
-    m_nameBox = new OutputBox("Name");
+    m_nameBox = new OutputBox("Name:");
 
     /* Configurate color box */
     m_colorBox = new ColorSelectBox("Color");
+    m_colorBox->setColor(Qt::white);
 
     /* Configurate layout */
     m_layout = new QVBoxLayout;
@@ -17,7 +18,7 @@ TrajPanel::TrajPanel(QWidget *parent)
 
     /* Configurate widget */
     setTitle("Trajectory settings");
-    setFixedWidth(200);
+    setFixedWidth(150);
     setContentsMargins(5, 15, 5, 5);
     setLayout(m_layout);
 
@@ -30,6 +31,7 @@ void TrajPanel::setTraj(Traj *traj)
     m_traj = traj;
 
     /* Set current parameters */
+    m_nameBox->setText(m_traj->getName());
     m_colorBox->setColor(m_traj->getColor());
 }
 

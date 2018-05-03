@@ -5,7 +5,7 @@
 
 #include <QGroupBox>
 
-#include "../Boxes/colorselectbox.hpp"
+#include "../boxes/colorselectbox.hpp"
 
 class ScenePanel : public QGroupBox
 {

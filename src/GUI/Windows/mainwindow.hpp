@@ -6,12 +6,12 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "../Boxes/doublevalueslidebox.hpp"
-#include "../Panels/trajcontrolpanel.hpp"
-#include "../Panels/trajpanel.hpp"
-#include "../Panels/scenepanel.hpp"
-#include "../Panels/lightpanel.hpp"
-#include "../../Opengl/trajscene.hpp"
+#include "../boxes/doublevalueslidebox.hpp"
+#include "../panels/trajcontrolpanel.hpp"
+#include "../panels/trajpanel.hpp"
+#include "../panels/scenepanel.hpp"
+#include "../panels/lightpanel.hpp"
+#include "../../scene/trajscene.hpp"
 
 class MainWindow : public QWidget
 {

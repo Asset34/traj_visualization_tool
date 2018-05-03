@@ -3,8 +3,6 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
-#include <QOpenGLBuffer>
-#include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
 
 #include <QPoint>
@@ -15,31 +13,7 @@
 #include <QDebug>
 
 #include "camera.hpp"
-#include "traj.hpp"
-
-class TrajBuffer : protected QOpenGLFunctions
-{
-public:
-    explicit TrajBuffer(Traj *traj);
-    ~TrajBuffer();
-
-    void bind();
-    void release();
-
-    Traj *getTraj() const;
-
-    QVector3D getColor() const;
-    int getVertexCount() const;
-    int getVertexCount(double time) const;
-    bool getDisplayStatus() const;
-
-private:
-    Traj *m_traj;
-    QOpenGLBuffer m_vbo;
-    QOpenGLVertexArrayObject m_vao;
-};
-
-
+#include "trajbuffer.hpp"
 
 class TrajScene : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -58,8 +32,8 @@ public slots:
 
     void setBackgroundColor(const QColor &color);
 
-    void setLightColor(const QColor &color);
     void setLightAmbientStrength(double strength);
+    void setLightColor(const QColor &color);
     void setLightSourcePosition(const QVector3D &vec);
 
 protected:

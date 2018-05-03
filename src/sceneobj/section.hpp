@@ -2,7 +2,9 @@
 #define SECTION_HPP
 
 #include <QList>
+
 #include <QTextStream>
+
 #include <QVector2D>
 #include <QVector3D>
 

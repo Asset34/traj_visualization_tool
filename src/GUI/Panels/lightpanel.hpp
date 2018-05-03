@@ -5,9 +5,9 @@
 
 #include <QGroupBox>
 
-#include "../Boxes/colorselectbox.hpp"
-#include "../Boxes/vectorinputbox.hpp"
-#include "../Boxes/doublevalueslidebox.hpp"
+#include "../boxes/colorselectbox.hpp"
+#include "../boxes/vectorinputbox.hpp"
+#include "../boxes/doublevalueslidebox.hpp"
 
 class LightPanel : public QGroupBox
 {
@@ -17,19 +17,19 @@ public:
     explicit LightPanel(QWidget *parent = nullptr);
 
 public slots:
-    void setLightColor(const QColor &color);
     void setlightAmbientStrength(float strength);
+    void setLightColor(const QColor &color);
     void setLightSourcePosition(const QVector3D &vec);
 
 private:
     QVBoxLayout *m_layout;
-    ColorSelectBox *m_lightColorBox;
     DoubleValueSlideBox *m_lightAmbientStrengthBox;
+    ColorSelectBox *m_lightColorBox;
     VectorInputBox *m_lightSourcePosBox;
 
 signals:
-    void lightColorChanged(const QColor &color);
     void lightAmbientStrengthChanged(double strength);
+    void lightColorChanged(const QColor &color);    
     void lightSourcePositionChanged(const QVector3D &vec);
 
 };

@@ -4,7 +4,8 @@ ScenePanel::ScenePanel(QWidget *parent)
     : QGroupBox(parent)
 {
     /* Configurate color box */
-    m_colorBox = new ColorSelectBox("Background color", Qt::gray);
+    m_colorBox = new ColorSelectBox("Background color");
+    m_colorBox->setColor(Qt::white);
 
     /* Configurate layout */
     m_layout = new QVBoxLayout;
@@ -14,7 +15,7 @@ ScenePanel::ScenePanel(QWidget *parent)
     /* Configurate widget */
     setTitle("Scene settings");
     setContentsMargins(5, 15, 5, 5);
-    setFixedWidth(200);
+    setFixedWidth(150);
     setFixedHeight(70);
     setLayout(m_layout);
 

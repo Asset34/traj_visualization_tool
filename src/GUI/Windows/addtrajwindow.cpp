@@ -7,14 +7,10 @@ AddTrajWindow::AddTrajWindow(QWidget *parent)
     m_nameBox = new TextInputBox("Name");
 
     /* Configurate path box */
-    m_pathBox = new OpenFileBox("Trajectory",
-                                "D:/Study/6th_Semester/Geometric_Modeling/CW/AttractorVisualizer/data",
-                                "Text data( *.txt )");
+    m_pathBox = new OpenFileBox("Trajectory", "", "Text data( *.txt )");
 
     /* Configurate path section box */
-    m_pathSectionBox = new OpenFileBox("Section",
-                                       "D:/Study/6th_Semester/Geometric_Modeling/CW/AttractorVisualizer/data",
-                                       "Text data( *.txt )");
+    m_pathSectionBox = new OpenFileBox("Section", "", "Text data( *.txt )");
 
     /* Configurate ok button */
     m_okButton = new QPushButton("Ok");
@@ -70,7 +66,7 @@ Traj *AddTrajWindow::getTraj() const
     QFile file2(m_pathBox->getPath());
     file2.open(QFile::ReadOnly);
     QTextStream stream2(&file2);
-    Traj *traj = new Traj(stream2, section);
+    Traj *traj = new Traj(m_nameBox->getText(), stream2, section);
 
     /* Set default trajectory parameters */
     traj->setDisplayed(true);

@@ -25,58 +25,60 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/GUI/Windows/mainwindow.cpp \
-    src/Opengl/camera.cpp \
-    src/GUI/Boxes/valueinputbox.cpp \
-    src/GUI/Boxes/doublevalueinputbox.cpp \
-    src/GUI/Boxes/flagsetbox.cpp \
-    src/GUI/Boxes/valueslidebox.cpp \
-    src/GUI/Boxes/doublevalueslidebox.cpp \
-    src/GUI/Boxes/openfilebox.cpp \
-    src/GUI/Boxes/colorselectbox.cpp \
-    src/Opengl/traj.cpp \
-    src/Opengl/trajscene.cpp \
-    src/GUI/Windows/addtrajwindow.cpp \
-    src/GUI/Panels/scenepanel.cpp \
-    src/GUI/Boxes/textinputbox.cpp \
-    src/GUI/Boxes/outputbox.cpp \
-    src/GUI/Panels/trajcontrolpanel.cpp \
-    src/GUI/Boxes/abstractbox.cpp \
-    src/GUI/Boxes/simpleabstractbox.cpp \
-    src/GUI/Panels/trajpanel.cpp \
-    src/Opengl/section.cpp \
-    src/Opengl/geometry.cpp \
-    src/GUI/Boxes/vectorinputbox.cpp \
-    src/GUI/Panels/lightpanel.cpp
+    src/gui/boxes/valueinputbox.cpp \
+    src/gui/boxes/doublevalueinputbox.cpp \
+    src/gui/boxes/flagsetbox.cpp \
+    src/gui/boxes/valueslidebox.cpp \
+    src/gui/boxes/doublevalueslidebox.cpp \
+    src/gui/boxes/openfilebox.cpp \
+    src/gui/boxes/colorselectbox.cpp \
+    src/gui/boxes/textinputbox.cpp \
+    src/gui/boxes/outputbox.cpp \
+    src/gui/boxes/abstractbox.cpp \
+    src/gui/boxes/simpleabstractbox.cpp \
+    src/gui/boxes/vectorinputbox.cpp \
+    src/gui/panels/scenepanel.cpp \
+    src/gui/panels/trajcontrolpanel.cpp \
+    src/gui/panels/trajpanel.cpp \
+    src/gui/panels/lightpanel.cpp \
+    src/gui/windows/mainwindow.cpp \
+    src/gui/windows/addtrajwindow.cpp \
+    src/scene/camera.cpp \
+    src/scene/trajscene.cpp \
+    src/sceneobj/traj.cpp \
+    src/sceneobj/section.cpp \
+    src/sceneobj/geometry.cpp \
+    src/scene/trajbuffer.cpp
 
 HEADERS += \
-    src/GUI/Windows/mainwindow.hpp \
-    src/Opengl/camera.hpp \
-    src/GUI/Boxes/valueinputbox.hpp \
-    src/GUI/Boxes/doublevalueinputbox.hpp \
-    src/GUI/Boxes/flagsetbox.hpp \
-    src/GUI/Boxes/valueslidebox.hpp \
-    src/GUI/Boxes/doublevalueslidebox.hpp \
-    src/GUI/Boxes/openfilebox.hpp \
-    src/GUI/Boxes/colorselectbox.hpp \
-    src/Opengl/traj.hpp \
-    src/Opengl/trajscene.hpp \
-    src/GUI/Windows/addtrajwindow.hpp \
-    src/GUI/Panels/scenepanel.hpp \
-    src/GUI/Boxes/textinputbox.hpp \
-    src/GUI/Boxes/outputbox.hpp \
-    src/GUI/Panels/trajcontrolpanel.hpp \
-    src/GUI/Boxes/abstractbox.hpp \
-    src/GUI/Boxes/simpleabstractbox.hpp \
-    src/GUI/Panels/trajpanel.hpp \
-    src/Opengl/section.hpp \
-    src/Opengl/geometry.hpp \
-    src/GUI/Boxes/vectorinputbox.hpp \
-    src/GUI/Panels/lightpanel.hpp
+    src/gui/boxes/valueinputbox.hpp \
+    src/gui/boxes/doublevalueinputbox.hpp \
+    src/gui/boxes/flagsetbox.hpp \
+    src/gui/boxes/valueslidebox.hpp \
+    src/gui/boxes/doublevalueslidebox.hpp \
+    src/gui/boxes/openfilebox.hpp \
+    src/gui/boxes/colorselectbox.hpp \
+    src/gui/boxes/textinputbox.hpp \
+    src/gui/boxes/outputbox.hpp \
+    src/gui/boxes/abstractbox.hpp \
+    src/gui/boxes/simpleabstractbox.hpp \
+    src/gui/boxes/vectorinputbox.hpp \
+    src/gui/panels/scenepanel.hpp \
+    src/gui/panels/trajcontrolpanel.hpp \
+    src/gui/panels/trajpanel.hpp \
+    src/gui/panels/lightpanel.hpp\
+    src/gui/windows/mainwindow.hpp \
+    src/gui/windows/addtrajwindow.hpp \
+    src/scene/camera.hpp \
+    src/scene/trajscene.hpp \
+    src/sceneobj/traj.hpp \
+    src/sceneobj/section.hpp \
+    src/sceneobj/geometry.hpp \
+    src/scene/trajbuffer.hpp
 
 DISTFILES += \
-    src/Opengl/Shaders/fragment_shader.glsl \
-    src/Opengl/Shaders/vertex_shader.glsl
+    src/shaders/fragment_shader.glsl \
+    src/shaders/vertex_shader.glsl
 
 RESOURCES += \
-    shaders.qrc
+    src/shaders/shaders.qrc

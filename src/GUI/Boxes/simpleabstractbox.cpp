@@ -4,6 +4,7 @@ SimpleAbstractBox::SimpleAbstractBox(const QString &name, QWidget *parent)
     : QWidget(parent)
 {
     m_nameLabel = new QLabel(name);
+    m_nameLabel->setFixedWidth(30);
     m_nameLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 }
 

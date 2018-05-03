@@ -45,7 +45,7 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     /* Configurate widget */
     setTitle("Trajectories");
     setContentsMargins(5, 15, 5, 5);
-    setFixedWidth(200);
+    setFixedWidth(150);
     setLayout(m_mainLayout);
 
     /* Configurate connections */
@@ -100,7 +100,7 @@ void TrajControlPanel::addTraj()
         m_trajs.push_back(traj);
 
         /* Add traj to list widget */
-        QListWidgetItem *item = new QListWidgetItem("test", m_trajList);
+        QListWidgetItem *item = new QListWidgetItem(traj->getName(), m_trajList);
         item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
         item->setCheckState(Qt::Checked);
 
