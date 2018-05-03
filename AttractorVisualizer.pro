@@ -45,7 +45,9 @@ SOURCES += \
     src/GUI/Boxes/simpleabstractbox.cpp \
     src/GUI/Panels/trajpanel.cpp \
     src/Opengl/section.cpp \
-    src/Opengl/geometry.cpp
+    src/Opengl/geometry.cpp \
+    src/GUI/Boxes/vectorinputbox.cpp \
+    src/GUI/Panels/lightpanel.cpp
 
 HEADERS += \
     src/GUI/Windows/mainwindow.hpp \
@@ -68,7 +70,9 @@ HEADERS += \
     src/GUI/Boxes/simpleabstractbox.hpp \
     src/GUI/Panels/trajpanel.hpp \
     src/Opengl/section.hpp \
-    src/Opengl/geometry.hpp
+    src/Opengl/geometry.hpp \
+    src/GUI/Boxes/vectorinputbox.hpp \
+    src/GUI/Panels/lightpanel.hpp
 
 DISTFILES += \
     src/Opengl/Shaders/fragment_shader.glsl \

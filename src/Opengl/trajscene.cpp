@@ -110,9 +110,36 @@ void TrajScene::setBackgroundColor(const QColor &color)
 {
     makeCurrent();
 
-    glClearColor(color.redF(), color.greenF(), color.blueF(), 1.0);
+    m_backgroundColor = color;
+
+    glClearColor(color.redF() * m_lightAmbientStrength,
+                 color.greenF() * m_lightAmbientStrength,
+                 color.blueF() * m_lightAmbientStrength,
+                 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    update();
+}
+
+void TrajScene::setLightColor(const QColor &color)
+{
+    m_lightColor.setX(color.redF());
+    m_lightColor.setY(color.greenF());
+    m_lightColor.setZ(color.blueF());
+
+    update();
+}
+
+void TrajScene::setLightAmbientStrength(double strength)
+{
+    m_lightAmbientStrength = strength;
+    setBackgroundColor(m_backgroundColor);
+    update();
+}
+
+void TrajScene::setLightSourcePosition(const QVector3D &vec)
+{
+    m_lightSourcePos = vec;
     update();
 }
 
@@ -136,6 +163,7 @@ void TrajScene::initializeGL()
         m_objectColorLoc = m_shprogram.uniformLocation("objectColor");
         m_lightColorLoc = m_shprogram.uniformLocation("lightColor");
         m_lightPosLoc = m_shprogram.uniformLocation("lightPos");
+        m_lightAmbientStrengthLoc = m_shprogram.uniformLocation("lightAmbientStrength");
         m_viewPosLoc = m_shprogram.uniformLocation("viewPos");
     m_shprogram.release();
 }
@@ -159,9 +187,9 @@ void TrajScene::paintGL()
         m_shprogram.setUniformValue(m_modelLoc, m_model);
         m_shprogram.setUniformValue(m_viewLoc, m_camera.getViewMatrix());
         m_shprogram.setUniformValue(m_projectionLoc, m_proj);
-
-        m_shprogram.setUniformValue(m_lightColorLoc, QVector3D(1.0, 1.0, 1.0));
-        m_shprogram.setUniformValue(m_lightPosLoc, QVector3D(0.0, 0.0, 10.0));
+        m_shprogram.setUniformValue(m_lightColorLoc, m_lightColor);
+        m_shprogram.setUniformValue(m_lightPosLoc, m_lightSourcePos);
+        m_shprogram.setUniformValue(m_lightAmbientStrengthLoc, m_lightAmbientStrength);
         m_shprogram.setUniformValue(m_viewPosLoc, m_camera.getPosition());
 
         for (int i = 0; i < m_buffers.count(); i++) {

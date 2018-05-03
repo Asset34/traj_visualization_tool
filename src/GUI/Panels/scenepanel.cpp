@@ -14,10 +14,16 @@ ScenePanel::ScenePanel(QWidget *parent)
     /* Configurate widget */
     setTitle("Scene settings");
     setContentsMargins(5, 15, 5, 5);
-    setFixedWidth(150);
+    setFixedWidth(200);
     setFixedHeight(70);
     setLayout(m_layout);
 
     /* Set connections */
     connect(m_colorBox, &ColorSelectBox::colorChanged, this, &ScenePanel::backgroundColorChanged);
+}
+
+void ScenePanel::setBackgroundColor(const QColor &color)
+{
+    m_colorBox->setColor(color);
+    emit backgroundColorChanged(color);
 }

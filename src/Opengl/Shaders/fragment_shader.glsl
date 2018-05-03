@@ -7,11 +7,11 @@ uniform vec3 objectColor;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
+uniform float lightAmbientStrength;
 
 void main() {
     /* Ambient */
-    float ambientStrength = 0.1;
-    vec3 ambient = ambientStrength * lightColor;
+    vec3 ambient = lightAmbientStrength * lightColor;
 
     /* Diffuse */
     vec3 norm = normalize(fragNormal);

@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     /* Configurate scene */
     m_scene = new TrajScene;
+    m_scene->setLightColor(Qt::white);
+//    m_scene->setLightAmbientStrength(0.1);
+    m_scene->setLightSourcePosition({0.0, 0.0, 1.0});
 
     /* Configurate time box */
     m_timeBox = new DoubleValueSlideBox("Time", 3, 0.1);
@@ -25,6 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     /* Configurate scene panel */
     m_scenePanel = new ScenePanel;
 
+    /* Configurate light panel */
+    m_lightPanel = new LightPanel;
+
     /* Configurate scene layout */
     m_sceneLayout = new QVBoxLayout;
     m_sceneLayout->setMargin(0);
@@ -37,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_panelLayout->addWidget(m_trajControlPanel);
     m_panelLayout->addWidget(m_trajPanel);
     m_panelLayout->addWidget(m_scenePanel);
+    m_panelLayout->addWidget(m_lightPanel);
 
     /* Configurate main layout */
     m_mainLayout = new QHBoxLayout;
@@ -48,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("Attractor Visualizer");
     setContentsMargins(5, 15, 5, 5);
     setLayout(m_mainLayout);
-    resize(600, 400);
+    resize(1000, 400);
 
     /* Set connections */
     connect(m_trajControlPanel, &TrajControlPanel::trajAdded, m_scene, &TrajScene::addTraj);
@@ -68,4 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_trajPanel, &TrajPanel::trajUpdated, m_scene, static_cast<void (TrajScene::*)()>(&TrajScene::update));
     connect(m_timeBox, &DoubleValueSlideBox::valueChanged, m_scene, &TrajScene::setCurrentTime);
     connect(m_scenePanel, &ScenePanel::backgroundColorChanged, m_scene, &TrajScene::setBackgroundColor);
+    connect(m_lightPanel, &LightPanel::lightColorChanged, m_scene, &TrajScene::setLightColor);
+    connect(m_lightPanel, &LightPanel::lightAmbientStrengthChanged, m_scene, &TrajScene::setLightAmbientStrength);
+    connect(m_lightPanel, &LightPanel::lightSourcePositionChanged, m_scene, &TrajScene::setLightSourcePosition);
 }

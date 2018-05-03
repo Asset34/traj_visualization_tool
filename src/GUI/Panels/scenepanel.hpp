@@ -14,6 +14,9 @@ class ScenePanel : public QGroupBox
 public:
     explicit ScenePanel(QWidget *parent = nullptr);
 
+public slots:
+    void setBackgroundColor(const QColor &color);
+
 private:
     QVBoxLayout *m_layout;
     ColorSelectBox *m_colorBox;

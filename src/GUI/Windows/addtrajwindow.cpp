@@ -74,7 +74,7 @@ Traj *AddTrajWindow::getTraj() const
 
     /* Set default trajectory parameters */
     traj->setDisplayed(true);
-    traj->setColor(Qt::black);
+    traj->setColor(Qt::white);
 
     return traj;
 }

@@ -17,6 +17,7 @@ TrajPanel::TrajPanel(QWidget *parent)
 
     /* Configurate widget */
     setTitle("Trajectory settings");
+    setFixedWidth(200);
     setContentsMargins(5, 15, 5, 5);
     setLayout(m_layout);
 

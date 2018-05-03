@@ -53,8 +53,14 @@ public slots:
     void addTraj(Traj *traj);
     void deleteTraj(int pos);
     void focusTraj(Traj *traj);
+
     void setCurrentTime(double time);
+
     void setBackgroundColor(const QColor &color);
+
+    void setLightColor(const QColor &color);
+    void setLightAmbientStrength(double strength);
+    void setLightSourcePosition(const QVector3D &vec);
 
 protected:
     /* OpenGL events */
@@ -78,6 +84,12 @@ private:
 
     double m_currentTime;
 
+    QColor m_backgroundColor;
+
+    QVector3D m_lightColor;
+    float m_lightAmbientStrength;
+    QVector3D m_lightSourcePos;
+
     Camera m_camera;
     QPoint m_mousePos;
 
@@ -94,6 +106,7 @@ private:
     int m_objectColorLoc;
     int m_lightColorLoc;
     int m_lightPosLoc;
+    int m_lightAmbientStrengthLoc;
     int m_viewPosLoc;
 
     /* Data buffers */

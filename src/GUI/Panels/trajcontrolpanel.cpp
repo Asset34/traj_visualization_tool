@@ -45,7 +45,7 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     /* Configurate widget */
     setTitle("Trajectories");
     setContentsMargins(5, 15, 5, 5);
-    setFixedWidth(150);
+    setFixedWidth(200);
     setLayout(m_mainLayout);
 
     /* Configurate connections */

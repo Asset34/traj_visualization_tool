@@ -10,6 +10,7 @@
 #include "../Panels/trajcontrolpanel.hpp"
 #include "../Panels/trajpanel.hpp"
 #include "../Panels/scenepanel.hpp"
+#include "../Panels/lightpanel.hpp"
 #include "../../Opengl/trajscene.hpp"
 
 class MainWindow : public QWidget
@@ -28,6 +29,7 @@ private:
     TrajControlPanel *m_trajControlPanel;
     TrajPanel *m_trajPanel;
     ScenePanel *m_scenePanel;
+    LightPanel *m_lightPanel;
 };
 
 #endif // MAINWINDOW_HPP
