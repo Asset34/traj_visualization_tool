@@ -89,8 +89,8 @@ void TrajScene::initializeGL()
     setLightSourcePosition({0.0, 0.0, 10.0});
 
     /* Create shader program */
-    m_shprogram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vshader.glsl");
-    m_shprogram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fshader.glsl");
+    m_shprogram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/vertex_shader.glsl");
+    m_shprogram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/fragment_shader.glsl");
     m_shprogram.bindAttributeLocation("pos", 0);
     m_shprogram.bindAttributeLocation("normal", 1);
     m_shprogram.link();
