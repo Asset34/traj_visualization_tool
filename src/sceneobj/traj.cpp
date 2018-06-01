@@ -134,33 +134,37 @@ const GLfloat *Traj::getConstData() const
 
 void Traj::setData()
 {
-    /* Create normals */
-    QList<QVector3D> normals;
-    for (int i = 1; i < m_trajData.count(); i++) {
-        normals.push_back(m_trajData[i] - m_trajData[i - 1]);
-    }
-
-    /* Create sections */
-    QList<Section> sections;
-    for (int i = 0; i < normals.count(); i++) {
-        m_section.setPlane(m_trajData[i], normals[i]);
-        sections.push_back(m_section);
-    }
-    m_section.setPlane(m_trajData.last(), normals.last());
-    sections.push_back(m_section);
-
-    /* Create segments */
-    for (int i = 1; i < sections.count(); i++) {
-        m_segments.push_back(TrajSegment(sections[i - 1], sections[i]));
-    }
-
-    /* Create opengl data */
+    /* Reset data */
     int size = 2 * (m_trajData.count() - 1) * m_section.getCount() * 4 * 3;
     m_data.clear();
     m_data.reserve(size);
-    for (int i = 0; i < m_segments.count(); i++) {
-            m_segments[i].setOpenGLData(m_data);
+
+    Normal norm;
+
+    /* Get initial data */
+    if (m_trajData.count() >= 2) {
+        norm = m_trajData[1] - m_trajData[0];
+        m_section.setPlane(m_trajData[0], norm);
     }
+
+    /* Get the rest data */
+    for (int i = 2; i < m_trajData.count(); i++) {
+        norm = m_trajData[i] - m_trajData[i - 1];
+
+        Section prevSection = m_section;
+        m_section.setPlane(m_trajData[i - 1], norm);
+
+        TrajSegment segment(prevSection, m_section);
+        m_segments.push_back(segment);
+        segment.setOpenGLData(m_data);
+    }
+
+    /* Get last data */
+    Section prevSection = m_section;
+    m_section.setPlane(m_trajData.last(), norm);
+    TrajSegment segment(prevSection, m_section);
+    m_segments.push_back(segment);
+    segment.setOpenGLData(m_data);
 }
 
 void Traj::setAverage()
