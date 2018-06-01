@@ -20,11 +20,6 @@ Section::Section(QTextStream &stream, const QVector3D &coord, const QVector3D &n
     setPlane(coord, normal);
 }
 
-const QVector3D &Section::operator[](int index) const
-{
-    return m_data.at(index);
-}
-
 void Section::setCoord(const QVector3D &coord)
 {
     updateCoord(coord);
@@ -43,19 +38,39 @@ void Section::setPlane(const QVector3D &coord, const QVector3D &normal)
     setNormal(normal);
 }
 
+void Section::invert()
+{
+    m_normal *= -1;
+}
+
 int Section::getCount() const
 {
     return m_data.count();
 }
 
-const QVector3D &Section::getFirst() const
+const QVector3D &Section::getFirstVertex() const
 {
     return m_data.first();
 }
 
-const QVector3D &Section::getLast() const
+const QVector3D &Section::getLastVertex() const
 {
     return m_data.last();
+}
+
+const QVector3D &Section::getCoord() const
+{
+    return m_coord;
+}
+
+const Normal &Section::getNormal() const
+{
+    return m_normal;
+}
+
+const QVector3D &Section::getVertexAt(int index) const
+{
+    return m_data.at(index);
 }
 
 void Section::updateCoord(const QVector3D &coord)
@@ -66,7 +81,7 @@ void Section::updateCoord(const QVector3D &coord)
     }
 }
 
-void Section::updateNormal(const QVector3D &normal)
+void Section::updateNormal(const Normal &normal)
 {
     QVector3D rotationVec = QVector3D::crossProduct(m_normal, normal);
     double rotationAngle = Geometry::angleBetween(m_normal, normal);

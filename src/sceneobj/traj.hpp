@@ -1,13 +1,16 @@
 #ifndef PTRAJ_HPP
 #define PTRAJ_HPP
 
-#include <QVector>
 #include <QTextStream>
 #include <QVector3D>
 #include <QColor>
 
+#include <QVector>
+#include <QList>
+
 #include "qopengl.h"
 #include "section.hpp"
+#include "trajsegment.hpp"
 
 class Traj
 {
@@ -53,14 +56,11 @@ private:
 
     Section m_section;
     QVector<QVector3D> m_trajData;
+    QList<TrajSegment> m_segments;
     QVector<GLfloat> m_data;
 
     void setData();
     void setAverage();
-
-    void addQuads(const Section &s1, const Section &s2);
-    void addQuad(const QVector3D &vec1, const QVector3D &vec2, const QVector3D &vec3, const QVector3D &vec4);
-    void addVector(const QVector3D &vec);
 };
 
 namespace TrajUtills {

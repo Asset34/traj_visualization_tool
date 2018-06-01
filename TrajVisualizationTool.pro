@@ -48,7 +48,9 @@ SOURCES += \
     src/sceneobj/traj.cpp \
     src/sceneobj/section.cpp \
     src/sceneobj/geometry.cpp \
-    src/scene/trajbuffer.cpp
+    src/scene/trajbuffer.cpp \
+    src/sceneobj/trajsegment.cpp \
+    src/sceneobj/face.cpp
 
 HEADERS += \
     src/gui/boxes/valueinputbox.hpp \
@@ -74,7 +76,9 @@ HEADERS += \
     src/sceneobj/traj.hpp \
     src/sceneobj/section.hpp \
     src/sceneobj/geometry.hpp \
-    src/scene/trajbuffer.hpp
+    src/scene/trajbuffer.hpp \
+    src/sceneobj/trajsegment.hpp \
+    src/sceneobj/face.hpp
 
 DISTFILES += \
     src/shaders/fragment_shader.glsl \

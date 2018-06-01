@@ -9,6 +9,7 @@
 #include <QVector3D>
 
 #include "geometry.hpp"
+#include "face.hpp"
 
 class Section
 {
@@ -19,22 +20,27 @@ public:
 
     int getCount() const;
 
-    const QVector3D &getFirst() const;
-    const QVector3D &getLast() const;
+    const QVector3D &getFirstVertex() const;
+    const QVector3D &getLastVertex() const;
+
+    const QVector3D &getCoord() const;
+    const Normal &getNormal() const;
+
+    const QVector3D &getVertexAt(int index) const;
 
     void setCoord(const QVector3D &coord);
     void setNormal(const QVector3D &normal);
     void setPlane(const QVector3D &coord, const QVector3D &normal);
 
-    const QVector3D &operator[](int index) const;
+    void invert();
 
 private:
     QVector3D m_coord;
-    QVector3D m_normal;
+    Normal m_normal;
     QList<QVector3D> m_data;
 
     void updateCoord(const QVector3D &coord);
-    void updateNormal(const QVector3D &normal);
+    void updateNormal(const Normal &normal);
 };
 
 #endif // SECTION_HPP

@@ -1,6 +1,5 @@
 #include "trajbuffer.hpp"
 
-
 TrajBuffer::TrajBuffer(Traj *traj)
     : m_traj(traj)
 {
