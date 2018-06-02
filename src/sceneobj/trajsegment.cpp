@@ -118,7 +118,7 @@ bool TrajSegment::isOverlap(const Face &face) const
 
 bool TrajSegment::isCollide(const TrajSegment &s1, const TrajSegment &s2)
 {
-    return isOverlap(s1, s2) && isOverlapAdditional(s1, s2);
+    return isOverlap(s1, s2) || isOverlapAdditional(s1, s2);
 }
 
 bool TrajSegment::isOverlap(const TrajSegment &s1, const TrajSegment &s2)
