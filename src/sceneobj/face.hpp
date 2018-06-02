@@ -6,9 +6,8 @@
 #include <QVector>
 
 #include "qopengl.h"
-
-typedef QVector3D Normal;
-typedef QPair<QVector3D, QVector3D> Edge;
+#include "geometry.hpp"
+#include "section.hpp"
 
 class Face
 {
@@ -31,6 +30,10 @@ public:
     Edge getBottomEdge() const;
 
     void setOpenglData(QVector<GLfloat> &data);
+
+    double compDistTo(const QVector3D &v) const;
+
+    bool isLookAt(const QVector3D &v) const;
 
 private:
     QVector3D m_rightTop;

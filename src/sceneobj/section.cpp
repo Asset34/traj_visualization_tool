@@ -43,6 +43,11 @@ void Section::invert()
     m_normal *= -1;
 }
 
+double Section::computeDistToPoint(const QVector3D &v) const
+{
+    return QVector3D::dotProduct(m_normal, v);
+}
+
 int Section::getCount() const
 {
     return m_data.count();

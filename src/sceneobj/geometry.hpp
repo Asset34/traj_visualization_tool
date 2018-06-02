@@ -7,6 +7,10 @@
 
 #include <QtMath>
 
+typedef QVector3D Normal;
+typedef QPair<QVector3D, QVector3D> Edge;
+typedef QPair<double, double> Interval;
+
 namespace Geometry {
 
 double angleBetween(const QVector3D &vec1, const QVector3D &vec2);

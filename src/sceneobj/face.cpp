@@ -66,6 +66,16 @@ void Face::setOpenglData(QVector<GLfloat> &data)
     setOpenglVertex(data, m_rightBottom);
 }
 
+double Face::compDistTo(const QVector3D &v) const
+{
+    return QVector3D::dotProduct(m_normal, v);
+}
+
+bool Face::isLookAt(const QVector3D &v) const
+{
+    return compDistTo(v) > 0;
+}
+
 void Face::setOpenglVertex(QVector<GLfloat> &data, const QVector3D &v)
 {
     // Add vertex

@@ -9,7 +9,6 @@
 #include <QVector3D>
 
 #include "geometry.hpp"
-#include "face.hpp"
 
 class Section
 {
@@ -33,6 +32,8 @@ public:
     void setPlane(const QVector3D &coord, const QVector3D &normal);
 
     void invert();
+
+    double computeDistToPoint(const QVector3D &v) const;
 
 private:
     QVector3D m_coord;
