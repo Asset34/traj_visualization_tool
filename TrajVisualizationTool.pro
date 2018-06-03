@@ -25,10 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/gui/boxes/valueinputbox.cpp \
     src/gui/boxes/doublevalueinputbox.cpp \
-    src/gui/boxes/flagsetbox.cpp \
-    src/gui/boxes/valueslidebox.cpp \
     src/gui/boxes/doublevalueslidebox.cpp \
     src/gui/boxes/openfilebox.cpp \
     src/gui/boxes/colorselectbox.cpp \
@@ -53,10 +50,7 @@ SOURCES += \
     src/sceneobj/face.cpp
 
 HEADERS += \
-    src/gui/boxes/valueinputbox.hpp \
     src/gui/boxes/doublevalueinputbox.hpp \
-    src/gui/boxes/flagsetbox.hpp \
-    src/gui/boxes/valueslidebox.hpp \
     src/gui/boxes/doublevalueslidebox.hpp \
     src/gui/boxes/openfilebox.hpp \
     src/gui/boxes/colorselectbox.hpp \
