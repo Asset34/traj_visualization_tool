@@ -26,6 +26,7 @@ public:
 
     const QVector3D &getVertexAt(int index) const;
     const Edge &getEdgeAt(int index) const;
+    QVector3D getEdgeVecAt(int index) const;
     const Face &getSideFaceAt(int index) const;
     const Section &getBottom() const;
     const Section &getTop() const;

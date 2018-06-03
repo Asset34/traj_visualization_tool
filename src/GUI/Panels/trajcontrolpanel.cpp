@@ -7,38 +7,41 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
 {
     /* Configurate list widget */
     m_trajList = new QListWidget;
-    m_trajList->setFixedWidth(80);
+    m_trajList->setFixedWidth(100);
 
     /* Configurate add button */
     m_addButton = new QPushButton("Add");
     m_addButton->setFixedHeight(25);
-    m_addButton->setFixedWidth(40);
+    m_addButton->setFixedWidth(60);
 
     /* Configurate delete button */
     m_deleteButton = new QPushButton("Delete");
     m_deleteButton->setFixedHeight(25);
-    m_deleteButton->setFixedWidth(40);
+    m_deleteButton->setFixedWidth(60);
+    m_deleteButton->setEnabled(false);
 
     /* Configurate select button */
-    m_selectButton = new QPushButton("Edit");
+    m_selectButton = new QPushButton("Select");
     m_selectButton->setFixedHeight(25);
-    m_selectButton->setFixedWidth(40);
+    m_selectButton->setFixedWidth(60);
+    m_selectButton->setEnabled(false);
 
     /* Configurate focus button */
     m_focusButton = new QPushButton("Focus");
     m_focusButton->setFixedHeight(25);
-    m_focusButton->setFixedWidth(40);
+    m_focusButton->setFixedWidth(60);
+    m_focusButton->setEnabled(false);
 
     /* Configurate show collision button */
-    m_showCollisionButton = new QPushButton("Show Collision");
-    m_showCollisionButton->setFixedHeight(25);
-    m_showCollisionButton->setFixedWidth(40);
+    m_showCollisionButton = new QPushButton("Show\nCollision");
+    m_showCollisionButton->setFixedHeight(40);
+    m_showCollisionButton->setFixedWidth(60);
     m_showCollisionButton->setEnabled(false);
 
     /* Configurate show collision button */
-    m_hideCollisionButton = new QPushButton("Hide Collision");
-    m_hideCollisionButton->setFixedHeight(25);
-    m_hideCollisionButton->setFixedWidth(40);
+    m_hideCollisionButton = new QPushButton("Hide\nCollision");
+    m_hideCollisionButton->setFixedHeight(40);
+    m_hideCollisionButton->setFixedWidth(60);
     m_hideCollisionButton->setEnabled(false);
 
     /* Configurate buttons layout */
@@ -61,7 +64,7 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     /* Configurate widget */
     setTitle("Trajectories");
     setContentsMargins(5, 15, 5, 5);
-    setFixedWidth(150);
+    setFixedWidth(200);
     setLayout(m_mainLayout);
 
     /* Configurate connections */
@@ -105,6 +108,18 @@ bool TrajControlPanel::checkLast() const
     return m_trajs.empty();
 }
 
+QString TrajControlPanel::createTrajName(Traj *traj) const
+{
+    QString name = traj->getName();
+
+    QVector3D initials = traj->getInitials();
+    name.append(" (" + QString::number(initials.x()) + ", ");
+    name.append(QString::number(initials.y()) + ", ");
+    name.append(QString::number(initials.z()) + ")");
+
+    return name;
+}
+
 void TrajControlPanel::addTraj()
 {
     AddTrajWindow *w = new AddTrajWindow(this);
@@ -117,8 +132,10 @@ void TrajControlPanel::addTraj()
         /* Add traj */
         m_trajs.push_back(traj);
 
+        hideCollision();
+
         /* Add traj to list widget */
-        QListWidgetItem *item = new QListWidgetItem(traj->getName(), m_trajList);
+        QListWidgetItem *item = new QListWidgetItem(createTrajName(traj), m_trajList);
         item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
         item->setCheckState(Qt::Checked);
 
@@ -127,6 +144,10 @@ void TrajControlPanel::addTraj()
             emit firstTrajWasAdded(traj);
             emit trajFocused(traj);
 
+            // Update widgets
+            m_deleteButton->setEnabled(true);
+            m_selectButton->setEnabled(true);
+            m_focusButton->setEnabled(true);
             m_showCollisionButton->setEnabled(true);
         }
         updateGeneralTimeValues();
@@ -145,11 +166,18 @@ void TrajControlPanel::deleteTraj()
         /* Delete from the list widget */
         m_trajList->takeItem(row);
 
+        hideCollision();
+
         /* Notify about current state */
         if (checkLast()) {
             emit allTrajWasDeleted();
 
+            /* Update widgets */
+            m_deleteButton->setEnabled(false);
+            m_selectButton->setEnabled(false);
+            m_focusButton->setEnabled(false);
             m_showCollisionButton->setEnabled(false);
+            m_hideCollisionButton->setEnabled(false);
         }
         else {
             updateGeneralTimeValues();

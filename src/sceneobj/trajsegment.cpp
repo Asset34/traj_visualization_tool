@@ -76,6 +76,12 @@ const Edge &TrajSegment::getEdgeAt(int index) const
     return m_edges.at(index);
 }
 
+QVector3D TrajSegment::getEdgeVecAt(int index) const
+{
+    Edge edge = m_edges.at(index);
+    return edge.second - edge.first;
+}
+
 const Face &TrajSegment::getSideFaceAt(int index) const
 {
     return m_sideFaces.at(index);
@@ -154,8 +160,8 @@ bool TrajSegment::isOverlapAdditional(const TrajSegment &s1, const TrajSegment &
     Interval inter1, inter2;
     for (int i = 0; i < s1.m_edges.count(); i++) {
         for (int j = 0; j < s2.m_edges.count(); j++) {
-            edgeVec1 = s1.m_edges[i].second - s1.m_edges[i].first;
-            edgeVec2 = s2.m_edges[i].second - s2.m_edges[i].first;
+            edgeVec1 = s1.getEdgeVecAt(i);
+            edgeVec2 = s2.getEdgeVecAt(i);
             norm = QVector3D::crossProduct(edgeVec1, edgeVec2);
 
             inter1 = s1.getDistIntervalTo(norm);

@@ -43,6 +43,8 @@ private:
     bool checkFirst() const;
     bool checkLast() const;
 
+    QString createTrajName(Traj *traj) const;
+
 private slots:
     void addTraj();
     void deleteTraj();

@@ -40,6 +40,8 @@ public:
 
     const QVector3D &getBarycenter() const;
 
+    const QVector3D &getInitials() const;
+
     int getTimeBorder() const;
     void setTimeBorder(int time);
     void setTimeBorderAtSegment(int index);

@@ -27,7 +27,7 @@ LightPanel::LightPanel(QWidget *parent)
 
     /* Configurate panel */
     setTitle("Light settings");
-    setFixedWidth(150);
+    setFixedWidth(200);
     setFixedHeight(250);
     setContentsMargins(5, 15, 5, 5);
     setLayout(m_layout);

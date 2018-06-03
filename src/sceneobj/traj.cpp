@@ -118,6 +118,11 @@ const QVector3D &Traj::getBarycenter() const
     return m_barycenter;
 }
 
+const QVector3D &Traj::getInitials() const
+{
+    return m_trajData.at(0);
+}
+
 int Traj::getTimeBorder() const
 {
     return m_timeBorder;
