@@ -113,11 +113,6 @@ const Color &Traj::getTopCollor() const
     return m_notcollisionCollor;
 }
 
-void Traj::setColorVec(const QVector3D &color)
-{
-    m_color = color;
-}
-
 const QVector3D &Traj::getBarycenter() const
 {
     return m_barycenter;

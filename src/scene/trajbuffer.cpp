@@ -43,12 +43,12 @@ const Color &TrajBuffer::getColor() const
 
 const Color &TrajBuffer::getBottomColor() const
 {
-    return m_traj->getCollisionColor();
+    return m_traj->getBottomColor();
 }
 
 const Color &TrajBuffer::getTopColor() const
 {
-    return m_traj->getNotcollisionCollor();
+    return m_traj->getTopCollor();
 }
 
 int TrajBuffer::getTimeBorder() const
