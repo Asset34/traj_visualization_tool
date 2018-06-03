@@ -81,8 +81,8 @@ HEADERS += \
     src/sceneobj/face.hpp
 
 DISTFILES += \
-    src/shaders/fragment_shader.glsl \
-    src/shaders/vertex_shader.glsl
+    shaders/fragment_shader.glsl \
+    shaders/vertex_shader.glsl
 
 RESOURCES += \
-    src/shaders/shaders.qrc
+    shaders/shaders.qrc
