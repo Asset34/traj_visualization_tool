@@ -58,6 +58,11 @@ Edge Face::getBottomEdge() const
     return Edge(m_rightBottom, m_leftBottom);
 }
 
+int Face::getOpenglDataCount()
+{
+    return 24;
+}
+
 void Face::setOpenglData(QVector<GLfloat> &data)
 {
     setOpenglVertex(data, m_rightTop);

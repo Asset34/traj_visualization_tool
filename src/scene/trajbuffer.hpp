@@ -18,10 +18,16 @@ public:
     void bind();
     void release();
 
-    QVector3D getColor() const;
-    int getVertexCount() const;
+    const Color &getColor() const;
+    const Color &getBottomColor() const;
+    const Color &getTopColor() const;
+
+    int getTimeBorder() const;
+
     int getVertexCount(double time) const;
+
     bool getDisplayStatus() const;
+    bool getSeparationStatus() const;
 
 private:
     Traj *m_traj;

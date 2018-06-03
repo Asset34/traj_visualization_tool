@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_trajControlPanel, &TrajControlPanel::trajAdded, m_scene, &TrajScene::addTraj);
     connect(m_trajControlPanel, &TrajControlPanel::trajDeleted, m_scene, &TrajScene::deleteTraj);
     connect(m_trajControlPanel, &TrajControlPanel::trajFocused, m_scene, &TrajScene::focusTraj);
-    connect(m_trajControlPanel, &TrajControlPanel::trajDisplayChanged, m_scene, static_cast<void (TrajScene::*)()>(&TrajScene::update));
+    connect(m_trajControlPanel, &TrajControlPanel::trajUpdated, m_scene, static_cast<void (TrajScene::*)()>(&TrajScene::update));
     connect(m_trajControlPanel, &TrajControlPanel::generalBeginTimeChanged, m_timeBox, &DoubleValueSlideBox::setMinimum);
     connect(m_trajControlPanel, &TrajControlPanel::generalEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setMaximum);
     connect(m_trajControlPanel, &TrajControlPanel::generalEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setValue);

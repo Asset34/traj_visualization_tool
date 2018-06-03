@@ -61,6 +61,11 @@ int TrajSegment::getEdgeCount() const
     return m_edges.count();
 }
 
+int TrajSegment::getOpenglDataCount() const
+{
+    return Face::getOpenglDataCount() * m_sideFaces.count();
+}
+
 const QVector3D &TrajSegment::getVertexAt(int index) const
 {
     return m_vertices.at(index);

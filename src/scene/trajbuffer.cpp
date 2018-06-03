@@ -10,7 +10,7 @@ TrajBuffer::TrajBuffer(Traj *traj)
     m_vao.bind();
         m_vbo.create();
         m_vbo.bind();
-        m_vbo.allocate(traj->getConstData(), traj->getCount() * sizeof(GLfloat));
+        m_vbo.allocate(traj->getConstData(), traj->getOpenglDataCount() * sizeof(GLfloat));
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
@@ -36,14 +36,24 @@ void TrajBuffer::release()
     m_vao.release();
 }
 
-QVector3D TrajBuffer::getColor() const
+const Color &TrajBuffer::getColor() const
 {
-    return m_traj->getColorVector();
+    return m_traj->getColorVec();
 }
 
-int TrajBuffer::getVertexCount() const
+const Color &TrajBuffer::getBottomColor() const
 {
-    return m_traj->getVertexCount();
+    return m_traj->getCollisionColor();
+}
+
+const Color &TrajBuffer::getTopColor() const
+{
+    return m_traj->getNotcollisionCollor();
+}
+
+int TrajBuffer::getTimeBorder() const
+{
+    return m_traj->getTimeBorder();
 }
 
 int TrajBuffer::getVertexCount(double time) const
@@ -54,4 +64,9 @@ int TrajBuffer::getVertexCount(double time) const
 bool TrajBuffer::getDisplayStatus() const
 {
     return m_traj->isDisplayed();
+}
+
+bool TrajBuffer::getSeparationStatus() const
+{
+    return m_traj->isCollisionMapped();
 }

@@ -21,18 +21,19 @@ Traj::Traj(const QString &name, QTextStream &stream, const Section &section)
                               values.at(2).toFloat()});
     }
 
-    setAverage();
+    /* Set some initial attributes */
+    m_collisionColor = {1.0, 0.0, 0.0};
+    m_notcollisionCollor = {1.0, 1.0, 1.0};
+    m_isDisplayed = true;
+    m_isCollisionMapped = false;
+    m_timeBorder = 0;
+    setBarycenter();
     setData();
-}
-
-int Traj::getTrajVertexCount() const
-{
-    return m_trajData.count();
 }
 
 int Traj::getVertexCount() const
 {
-    return getCount() / 3;
+    return m_trajData.count();
 }
 
 int Traj::getVertexCount(double time) const
@@ -40,14 +41,19 @@ int Traj::getVertexCount(double time) const
     return (time - m_timeBegin) * m_valPerSec * m_section.getCount() * 4;
 }
 
-int Traj::getCount() const
+int Traj::getOpenglDataCount() const
 {
     return m_data.count();
 }
 
-int Traj::getCount(double time) const
+int Traj::getOpenglDataCount(double time) const
 {
-    return getVertexCount(time) * 3;
+    return getVertexCount(time) * m_segments[0].getOpenglDataCount();
+}
+
+int Traj::getSegmentsCount() const
+{
+    return m_segments.count();
 }
 
 double Traj::getBeginTime() const
@@ -75,11 +81,6 @@ void Traj::setName(const QString &name)
     m_name = name;
 }
 
-const QVector3D &Traj::getColorVector() const
-{
-    return m_color;
-}
-
 QColor Traj::getColor() const
 {
     QColor color;
@@ -90,11 +91,6 @@ QColor Traj::getColor() const
     return color;
 }
 
-void Traj::setColor(const QVector3D &color)
-{
-    m_color = color;
-}
-
 void Traj::setColor(const QColor &color)
 {
     m_color = {float(color.redF()),
@@ -102,29 +98,69 @@ void Traj::setColor(const QColor &color)
                float(color.blueF())};
 }
 
-const QVector3D &Traj::getAverage() const
+const Color &Traj::getColorVec() const
 {
-    return m_average;
+    return m_color;
+}
+
+const Color &Traj::getBottomColor() const
+{
+    return m_collisionColor;
+}
+
+const Color &Traj::getTopCollor() const
+{
+    return m_notcollisionCollor;
+}
+
+void Traj::setColorVec(const QVector3D &color)
+{
+    m_color = color;
+}
+
+const QVector3D &Traj::getBarycenter() const
+{
+    return m_barycenter;
+}
+
+int Traj::getTimeBorder() const
+{
+    return m_timeBorder;
+}
+
+void Traj::setTimeBorder(int time)
+{
+    m_timeBorder = time;
+}
+
+void Traj::setTimeBorderAtSegment(int index)
+{
+    m_timeBorder = m_timeBegin + index * getTimeStep();
 }
 
 bool Traj::isDisplayed() const
 {
-    return m_displayFlag;
+    return m_isDisplayed;
 }
 
-void Traj::setDisplayed(bool flag)
+void Traj::setDisplayed(bool status)
 {
-    m_displayFlag = flag;
+    m_isDisplayed = status;
 }
 
-void Traj::setDisplayed(Qt::CheckState state)
+bool Traj::isCollisionMapped() const
 {
-    if (state == Qt::Checked) {
-        m_displayFlag = true;
-    }
-    else {
-        m_displayFlag = false;
-    }
+    return m_isCollisionMapped;
+}
+
+void Traj::setCollisionMapped(bool status)
+{
+    m_isCollisionMapped = status;
+}
+
+const TrajSegment &Traj::getSegmentAt(int index) const
+{
+    return m_segments.at(index);
 }
 
 const GLfloat *Traj::getConstData() const
@@ -167,19 +203,19 @@ void Traj::setData()
     segment.setOpenGLData(m_data);
 }
 
-void Traj::setAverage()
+void Traj::setBarycenter()
 {
     QVector3D sum = {0.0, 0.0, 0.0};
     for (int i = 0; i < m_trajData.count(); i++) {
         sum += m_trajData[i];
     }
 
-    m_average = sum / m_trajData.count();
+    m_barycenter = sum / m_trajData.count();
 }
 
 namespace TrajUtills {
 
-double generalBeginTime(const QList<Traj*> &trajs)
+double compGeneralBeginTime(const QList<Traj*> &trajs)
 {
     double time = trajs.first()->getBeginTime();
 
@@ -192,7 +228,7 @@ double generalBeginTime(const QList<Traj*> &trajs)
     return time;
 }
 
-double generalEndTime(const QList<Traj*> &trajs)
+double compGeneralEndTime(const QList<Traj*> &trajs)
 {
     double time = trajs.first()->getEndTime();
 
@@ -205,7 +241,7 @@ double generalEndTime(const QList<Traj*> &trajs)
     return time;
 }
 
-double generalTimeStep(const QList<Traj*> &trajs)
+double compGeneralTimeStep(const QList<Traj*> &trajs)
 {
     double step = trajs.first()->getTimeStep();
 
@@ -216,6 +252,24 @@ double generalTimeStep(const QList<Traj*> &trajs)
     }
 
     return step;
+}
+
+int compGeneralCollisionTimeBorder(const QList<Traj*> &trajs)
+{
+    bool check;
+    for (int i = 0; i < trajs[0]->getSegmentsCount(); i++) {
+        for (int j = 0; j < trajs.count(); j++) {
+            for (int k = j + 1; k < trajs.count(); k++) {
+                check = TrajSegment::isCollide(trajs[j]->getSegmentAt(i),
+                                               trajs[k]->getSegmentAt(i));
+                if(!check) {
+                    return i - 1;
+                }
+            }
+        }
+    }
+
+    return trajs[0]->getSegmentsCount() - 1;
 }
 
 } // TrajUtills

@@ -1,5 +1,7 @@
 #include "trajcontrolpanel.hpp"
 
+#include <QDebug>
+
 TrajControlPanel::TrajControlPanel(QWidget *parent)
     : QGroupBox(parent)
 {
@@ -27,6 +29,18 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     m_focusButton->setFixedHeight(25);
     m_focusButton->setFixedWidth(40);
 
+    /* Configurate show collision button */
+    m_showCollisionButton = new QPushButton("Show Collision");
+    m_showCollisionButton->setFixedHeight(25);
+    m_showCollisionButton->setFixedWidth(40);
+    m_showCollisionButton->setEnabled(false);
+
+    /* Configurate show collision button */
+    m_hideCollisionButton = new QPushButton("Hide Collision");
+    m_hideCollisionButton->setFixedHeight(25);
+    m_hideCollisionButton->setFixedWidth(40);
+    m_hideCollisionButton->setEnabled(false);
+
     /* Configurate buttons layout */
     m_buttonsLayout = new QVBoxLayout;
     m_buttonsLayout->setMargin(0);
@@ -34,6 +48,8 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     m_buttonsLayout->addWidget(m_deleteButton);
     m_buttonsLayout->addWidget(m_selectButton);
     m_buttonsLayout->addWidget(m_focusButton);
+    m_buttonsLayout->addWidget(m_showCollisionButton);
+    m_buttonsLayout->addWidget(m_hideCollisionButton);
     m_buttonsLayout->addStretch(1);
 
     /* Configurate main layout */
@@ -55,20 +71,22 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     connect(m_focusButton, &QPushButton::clicked, this, &TrajControlPanel::focusTraj);
     connect(m_trajList, &QListWidget::itemChanged, this, &TrajControlPanel::setTrajDisplay);
     connect(m_trajList, &QListWidget::itemDoubleClicked, this, &TrajControlPanel::selectTraj);
+    connect(m_showCollisionButton, &QPushButton::clicked, this, &TrajControlPanel::showCollision);
+    connect(m_hideCollisionButton, &QPushButton::clicked, this, &TrajControlPanel::hideCollision);
 }
 
 void TrajControlPanel::updateGeneralTimeValues()
 {
     /* Update general begin time */
-    double generalBegin = TrajUtills::generalBeginTime(m_trajs);
+    double generalBegin = TrajUtills::compGeneralBeginTime(m_trajs);
     emit generalBeginTimeChanged(generalBegin);
 
     /* Update general end time */
-    double generalEnd = TrajUtills::generalEndTime(m_trajs);
+    double generalEnd = TrajUtills::compGeneralEndTime(m_trajs);
     emit generalEndTimeChanged(generalEnd);
 
     /* Update general time step */
-    double generalStep = TrajUtills::generalTimeStep(m_trajs);
+    double generalStep = TrajUtills::compGeneralTimeStep(m_trajs);
     emit generalTimeStepChanged(generalStep);
 }
 
@@ -108,6 +126,8 @@ void TrajControlPanel::addTraj()
         if (checkFirst()) {
             emit firstTrajWasAdded(traj);
             emit trajFocused(traj);
+
+            m_showCollisionButton->setEnabled(true);
         }
         updateGeneralTimeValues();
 
@@ -128,6 +148,8 @@ void TrajControlPanel::deleteTraj()
         /* Notify about current state */
         if (checkLast()) {
             emit allTrajWasDeleted();
+
+            m_showCollisionButton->setEnabled(false);
         }
         else {
             updateGeneralTimeValues();
@@ -159,5 +181,33 @@ void TrajControlPanel::setTrajDisplay(QListWidgetItem *item)
     Qt::CheckState status = item->checkState();
 
     m_trajs.at(row)->setDisplayed(status);
-    emit trajDisplayChanged();
+    emit trajUpdated();
+}
+
+void TrajControlPanel::showCollision()
+{
+    /* Update traj */
+    int borderSegmentIndex = TrajUtills::compGeneralCollisionTimeBorder(m_trajs);
+    for (int i = 0; i < m_trajs.count(); i++) {
+        m_trajs[i]->setTimeBorderAtSegment(borderSegmentIndex);
+        m_trajs[i]->setCollisionMapped(true);
+    }
+    emit trajUpdated();
+
+    /* Update widgets */
+    m_showCollisionButton->setEnabled(false);
+    m_hideCollisionButton->setEnabled(true);
+}
+
+void TrajControlPanel::hideCollision()
+{
+    /* Update trajectories */
+    for (int i = 0; i < m_trajs.count(); i++) {
+        m_trajs[i]->setCollisionMapped(false);
+    }
+    emit trajUpdated();
+
+    /* Update widgets */
+    m_showCollisionButton->setEnabled(true);
+    m_hideCollisionButton->setEnabled(false);
 }

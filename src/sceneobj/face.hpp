@@ -32,8 +32,9 @@ public:
     void setOpenglData(QVector<GLfloat> &data);
 
     double compDistTo(const QVector3D &v) const;
-
     bool isLookAt(const QVector3D &v) const;
+
+    static int getOpenglDataCount();
 
 private:
     QVector3D m_rightTop;

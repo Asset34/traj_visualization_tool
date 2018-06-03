@@ -28,6 +28,8 @@ private:
     QPushButton *m_deleteButton;
     QPushButton *m_selectButton;
     QPushButton *m_focusButton;
+    QPushButton *m_showCollisionButton;
+    QPushButton *m_hideCollisionButton;
 
     QList<Traj*> m_trajs;
 
@@ -47,13 +49,15 @@ private slots:
     void selectTraj();
     void focusTraj();
     void setTrajDisplay(QListWidgetItem *item);
+    void showCollision();
+    void hideCollision();
 
 signals:
     void trajAdded(Traj *ptraj);
     void trajDeleted(int pos);
     void trajFocused(Traj *traj);
     void trajSelected(Traj *traj);
-    void trajDisplayChanged();
+    void trajUpdated();
     void generalBeginTimeChanged(double time);
     void generalEndTimeChanged(double time);
     void generalTimeStepChanged(double step);

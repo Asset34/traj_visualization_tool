@@ -4,6 +4,8 @@
 #include <QList>
 #include <QVector3D>
 
+#include <QColor>
+
 #include "climits"
 
 #include "geometry.hpp"
@@ -20,6 +22,7 @@ public:
     int getFaceCount() const;
     int getSideFaceCount() const;
     int getEdgeCount() const;
+    int getOpenglDataCount() const;
 
     const QVector3D &getVertexAt(int index) const;
     const Edge &getEdgeAt(int index) const;

@@ -31,7 +31,7 @@ void TrajScene::deleteTraj(int pos)
 
 void TrajScene::focusTraj(Traj *traj)
 {
-    m_camera.moveCenter(traj->getAverage());
+    m_camera.moveCenter(traj->getBarycenter());
     update();
 }
 
@@ -135,8 +135,26 @@ void TrajScene::paintGL()
         for (int i = 0; i < m_buffers.count(); i++) {
             if (m_buffers[i]->getDisplayStatus()) {
                 m_buffers[i]->bind();
+                if(m_buffers[i]->getSeparationStatus()) {
+                    int timeBorder = m_buffers[i]->getTimeBorder();
+                    if (m_currentTime < timeBorder) {
+                        m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getBottomColor());
+                        glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
+                    }
+                    else {
+                        m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getBottomColor());
+                        glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(timeBorder));
+
+                        m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getTopColor());
+                        int start = m_buffers[i]->getVertexCount(timeBorder);
+                        int length = m_buffers[i]->getVertexCount(m_currentTime) - start;
+                        glDrawArrays(GL_QUADS, start, length);
+                    }
+                }
+                else {
                     m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getColor());
                     glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
+                }
                 m_buffers[i]->release();
             }
         }
