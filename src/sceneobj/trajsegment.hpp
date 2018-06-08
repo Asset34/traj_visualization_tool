@@ -1,12 +1,11 @@
 #ifndef TRAJSEGMENT_HPP
 #define TRAJSEGMENT_HPP
 
-#include <QList>
-#include <QVector3D>
+#include <QVector>
 
 #include <QColor>
 
-#include "climits"
+#include <QVector3D>
 
 #include "geometry.hpp"
 #include "section.hpp"
@@ -18,26 +17,28 @@ public:
     TrajSegment(const Section &bottom, const Section &top);
 
     int getVertexCount() const;
-    int getSectionVertexCount() const;
     int getFaceCount() const;
     int getSideFaceCount() const;
     int getEdgeCount() const;
-    int getOpenglDataCount() const;
+
+    int getBufferSize() const;
 
     const QVector3D &getVertexAt(int index) const;
     const Edge &getEdgeAt(int index) const;
-    QVector3D getEdgeVecAt(int index) const;
     const Face &getSideFaceAt(int index) const;
     const Section &getBottom() const;
     const Section &getTop() const;
 
-    Interval getDistIntervalTo(const Normal &norm) const;
+    QVector3D getEdgeVecAt(int index) const;
 
-    void setOpenGLData(QVector<GLfloat> &data);
+    Interval computeDistanceIntervalTo(const Normal &norm) const;
 
-    bool isOverlap(const Face &face) const;
+    void appendToBuffer(QVector<GLfloat> &buffer);
 
-    static bool isCollide(const TrajSegment &s1, const TrajSegment &s2);
+    bool detectCollisionTo(const Face &face) const;
+    bool detectCollisionTo(const TrajSegment &s) const;
+
+    static bool detectFullCollision(const TrajSegment &s1, const TrajSegment &s2);
 
 private:
     Section m_bottom;
@@ -45,10 +46,19 @@ private:
 
     QVector<QVector3D> m_vertices;
     QVector<Edge> m_edges;
-    QList<Face> m_sideFaces;
+    QVector<Face> m_sideFaces;
 
-    static bool isOverlap(const TrajSegment &s1, const TrajSegment &s2);
-    static bool isOverlapAdditional(const TrajSegment &s1, const TrajSegment &s2);
+    void addVertices();
+    void addFaces();
+    void addEdges();
+
+    void addVerticesFrom(const Section &s);
+    void addFacesBetween(const Section &s1, const Section &s2);
+    void addEdgesFrom(const Section &s);
+    void addEdgesBetween(const Section &s1, const Section &s2);
+
+    static bool detectCollision(const TrajSegment &s1, const TrajSegment &s2);
+    static bool detectAdditionalCollision(const TrajSegment &s1, const TrajSegment &s2);
 };
 
 #endif // TRAJSEGMENT_HPP

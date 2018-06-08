@@ -2,58 +2,49 @@
 
 Traj::Traj(const QString &name, QTextStream &stream, const Section &section)
     : m_name(name),
-      m_section(section)
+      m_section(section),
+      m_timeBorder(0),
+      m_color(1.0, 1.0, 1.0),
+      m_belowColor(1.0, 0.0, 0.0),
+      m_aboveColor(1.0, 1.0, 1.0),
+      m_isDisplayed(true),
+      m_isCollisionMapped(false)
 {
-    /* Load trajectory time values */
-    m_timeBegin = stream.readLine().toDouble();
-    m_timeEnd = stream.readLine().toDouble();
-    m_valPerSec = stream.readLine().toDouble();
+    addTimeAttributes(stream);
+    addTrajVertices(stream);
 
-    /* Load trajectory data */
-    int trajDataSize = (m_timeEnd - m_timeBegin) * m_valPerSec + 1;
-    m_trajData.reserve(trajDataSize);
-    QStringList values;
-    while (!stream.atEnd()) {
-        values = stream.readLine().split(',');
-
-        m_trajData.push_back({values.at(0).toFloat(),
-                              values.at(1).toFloat(),
-                              values.at(2).toFloat()});
-    }
-
-    /* Set some initial attributes */
-    m_collisionColor = {1.0, 0.0, 0.0};
-    m_notcollisionCollor = {1.0, 1.0, 1.0};
-    m_isDisplayed = true;
-    m_isCollisionMapped = false;
-    m_timeBorder = 0;
-    setBarycenter();
-    setData();
+    computeBufferData();
+    computeBarycenter();
 }
 
 int Traj::getVertexCount() const
 {
-    return m_trajData.count();
+    return getVertexCount(m_timeEnd);
 }
 
 int Traj::getVertexCount(double time) const
 {
-    return (time - m_timeBegin) * m_valPerSec * m_section.getCount() * 4;
+    return (time - m_timeBegin) * m_valPerSec * m_section.getVertexCount() * 4;
 }
 
-int Traj::getOpenglDataCount() const
-{
-    return m_data.count();
-}
-
-int Traj::getOpenglDataCount(double time) const
-{
-    return getVertexCount(time) * m_segments[0].getOpenglDataCount();
-}
-
-int Traj::getSegmentsCount() const
+int Traj::getSegmentCount() const
 {
     return m_segments.count();
+}
+
+int Traj::getBufferSize() const
+{
+    return m_bufferData.count();
+}
+
+int Traj::getBufferSize(double time) const
+{
+    if (m_bufferData.empty()) {
+        return 0;
+    }
+    else {
+        return getVertexCount(time) * m_segments[0].getBufferSize();
+    }
 }
 
 double Traj::getBeginTime() const
@@ -93,9 +84,7 @@ QColor Traj::getColor() const
 
 void Traj::setColor(const QColor &color)
 {
-    m_color = {float(color.redF()),
-               float(color.greenF()),
-               float(color.blueF())};
+    m_color = Color(color.redF(), color.greenF(), color.blueF());
 }
 
 const Color &Traj::getColorVec() const
@@ -103,14 +92,14 @@ const Color &Traj::getColorVec() const
     return m_color;
 }
 
-const Color &Traj::getBottomColor() const
+const Color &Traj::getColorBelowTimeBorder() const
 {
-    return m_collisionColor;
+    return m_belowColor;
 }
 
-const Color &Traj::getTopCollor() const
+const Color &Traj::getColorAboveTimeBorder() const
 {
-    return m_notcollisionCollor;
+    return m_aboveColor;
 }
 
 const QVector3D &Traj::getBarycenter() const
@@ -120,7 +109,24 @@ const QVector3D &Traj::getBarycenter() const
 
 const QVector3D &Traj::getInitials() const
 {
-    return m_trajData.at(0);
+    return m_trajVertices.at(0);
+}
+
+QString Traj::getStringInitials() const
+{
+    QVector3D initials = getInitials();
+
+    QString stringInitials;
+
+    stringInitials.append('(');
+        stringInitials.append(QString::number(initials.x()));
+        stringInitials.append(',');
+        stringInitials.append(QString::number(initials.y()));
+        stringInitials.append(',');
+        stringInitials.append(QString::number(initials.z()));
+    stringInitials.append(')');
+
+    return stringInitials;
 }
 
 int Traj::getTimeBorder() const
@@ -128,7 +134,7 @@ int Traj::getTimeBorder() const
     return m_timeBorder;
 }
 
-void Traj::setTimeBorder(int time)
+void Traj::setTimeBorder(double time)
 {
     m_timeBorder = time;
 }
@@ -158,64 +164,109 @@ void Traj::setCollisionMapped(bool status)
     m_isCollisionMapped = status;
 }
 
-const TrajSegment &Traj::getSegmentAt(int index) const
+const GLfloat *Traj::getBufferData() const
 {
-    return m_segments.at(index);
+    return m_bufferData.constData();
 }
 
-const GLfloat *Traj::getConstData() const
+bool Traj::detectSegmentCollision(const Traj &t1, const Traj &t2, int segmentIndex)
 {
-    return m_data.constData();
+    TrajSegment segment1 = t1.m_segments.at(segmentIndex);
+    TrajSegment segment2 = t2.m_segments.at(segmentIndex);
+
+    bool isCollided = TrajSegment::detectFullCollision(segment1, segment2);
+
+    return isCollided;
 }
 
-void Traj::setData()
+void Traj::addTimeAttributes(QTextStream &stream)
 {
-    /* Reset data */
-    int size = 2 * (m_trajData.count() - 1) * m_section.getCount() * 4 * 3;
-    m_data.clear();
-    m_data.reserve(size);
+    bool isAllConverted = true;
+    bool isConverted;
+
+    m_timeBegin = stream.readLine().toDouble(&isConverted);
+    isAllConverted = isAllConverted && isConverted;
+
+    m_timeEnd = stream.readLine().toDouble(&isConverted);
+    isAllConverted = isAllConverted && isConverted;
+
+    m_valPerSec = stream.readLine().toDouble(&isConverted);
+    isAllConverted = isAllConverted && isConverted;
+
+    if (!isAllConverted) {
+        throw std::logic_error("");
+    }
+}
+
+void Traj::addTrajVertices(QTextStream &stream)
+{
+    int numTrajVertices = (m_timeEnd - m_timeBegin) * m_valPerSec + 1;
+    m_trajVertices.reserve(numTrajVertices);
+
+    QStringList strVertex;
+    QVector3D vec;
+    while (!stream.atEnd()) {
+        strVertex = stream.readLine().split(',');
+
+        vec = {strVertex.at(0).toFloat(),
+               strVertex.at(1).toFloat(),
+               strVertex.at(2).toFloat()};
+        m_trajVertices.push_back(vec);
+    }
+}
+
+void Traj::computeBufferData()
+{
+    int size = 2 * (m_trajVertices.count() - 1) * m_section.getVertexCount() * 4 * 3;
+    m_bufferData.reserve(size);
 
     Normal norm;
 
     /* Get initial data */
-    if (m_trajData.count() >= 2) {
-        norm = m_trajData[1] - m_trajData[0];
-        m_section.setPlane(m_trajData[0], norm);
+    if (m_trajVertices.count() >= 2) {
+        norm = m_trajVertices[1] - m_trajVertices[0];
+        m_section.setPlane(m_trajVertices[0], norm);
     }
 
     /* Get the rest data */
-    for (int i = 2; i < m_trajData.count(); i++) {
-        norm = m_trajData[i] - m_trajData[i - 1];
+    for (int i = 2; i < m_trajVertices.count(); i++) {
+        norm = m_trajVertices[i] - m_trajVertices[i - 1];
 
         Section prevSection = m_section;
-        m_section.setPlane(m_trajData[i - 1], norm);
+        m_section.setPlane(m_trajVertices[i - 1], norm);
 
         TrajSegment segment(prevSection, m_section);
         m_segments.push_back(segment);
-        segment.setOpenGLData(m_data);
+        segment.appendToBuffer(m_bufferData);
     }
 
     /* Get last data */
     Section prevSection = m_section;
-    m_section.setPlane(m_trajData.last(), norm);
+    m_section.setPlane(m_trajVertices.last(), norm);
     TrajSegment segment(prevSection, m_section);
     m_segments.push_back(segment);
-    segment.setOpenGLData(m_data);
+    segment.appendToBuffer(m_bufferData);
 }
 
-void Traj::setBarycenter()
+void Traj::computeBarycenter()
 {
-    QVector3D sum = {0.0, 0.0, 0.0};
-    for (int i = 0; i < m_trajData.count(); i++) {
-        sum += m_trajData[i];
+    QVector3D sum(0.0, 0.0, 0.0);
+    for (int i = 0; i < m_trajVertices.count(); i++) {
+        sum += m_trajVertices[i];
     }
 
-    m_barycenter = sum / m_trajData.count();
+    m_barycenter = sum / m_trajVertices.count();
 }
+
+
+
+
+
+
 
 namespace TrajUtills {
 
-double compGeneralBeginTime(const QList<Traj*> &trajs)
+double computeGeneralBeginTime(const QList<Traj*> &trajs)
 {
     double time = trajs.first()->getBeginTime();
 
@@ -228,7 +279,7 @@ double compGeneralBeginTime(const QList<Traj*> &trajs)
     return time;
 }
 
-double compGeneralEndTime(const QList<Traj*> &trajs)
+double computeGeneralEndTime(const QList<Traj*> &trajs)
 {
     double time = trajs.first()->getEndTime();
 
@@ -241,7 +292,7 @@ double compGeneralEndTime(const QList<Traj*> &trajs)
     return time;
 }
 
-double compGeneralTimeStep(const QList<Traj*> &trajs)
+double computeGeneralTimeStep(const QList<Traj*> &trajs)
 {
     double step = trajs.first()->getTimeStep();
 
@@ -254,22 +305,23 @@ double compGeneralTimeStep(const QList<Traj*> &trajs)
     return step;
 }
 
-int compGeneralCollisionTimeBorder(const QList<Traj*> &trajs)
+int computeCollisionSegmentIndex(const QList<Traj *> &trajs)
 {
-    bool check;
-    for (int i = 0; i < trajs[0]->getSegmentsCount(); i++) {
+    bool isCollided;
+    int numSegments = trajs[0]->getSegmentCount();
+    for (int i = 0; i < numSegments; i++) {
         for (int j = 0; j < trajs.count(); j++) {
             for (int k = j + 1; k < trajs.count(); k++) {
-                check = TrajSegment::isCollide(trajs[j]->getSegmentAt(i),
-                                               trajs[k]->getSegmentAt(i));
-                if(!check) {
-                    return i - 1;
+                isCollided = Traj::detectSegmentCollision(*trajs[j], *trajs[k], i);
+
+                if(!isCollided) {
+                    return i;
                 }
             }
         }
     }
 
-    return trajs[0]->getSegmentsCount() - 1;
+    return -1;
 }
 
 } // TrajUtills

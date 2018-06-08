@@ -1,29 +1,37 @@
 #include "section.hpp"
 
-Section::Section(QTextStream &stream, const QVector3D &coord, const QVector3D &normal)
-    : m_coord(coord),
+Section::Section(QTextStream &stream, const QVector3D &point, const QVector3D &normal)
+    : m_point(point),
       m_normal(normal)
 {
     /* Load plane data */
+    QList<QVector3D> vertices;
     float x, y;
     while (!stream.atEnd()) {
         stream >> x;
         stream >> y;
-        m_data.push_back({x, y, 0.0});
+        vertices.push_back({x, y, 0.0});
     }
-
-    /* Set default plane values */
-    m_coord = {0.0, 0.0, 0.0};
-    m_normal = {0.0, 0.0, 1.0};
+    m_vertices = vertices.toVector();
 
     /* Transform data */
-    setPlane(coord, normal);
+    setPlane(point, normal);
 }
 
-void Section::setCoord(const QVector3D &coord)
+const QVector3D &Section::getPoint() const
 {
-    updateCoord(coord);
-    m_coord = coord;
+    return m_point;
+}
+
+void Section::setPoint(const QVector3D &point)
+{
+    updatePoint(point);
+    m_point = point;
+}
+
+const Normal &Section::getNormal() const
+{
+    return m_normal;
 }
 
 void Section::setNormal(const QVector3D &normal)
@@ -32,9 +40,9 @@ void Section::setNormal(const QVector3D &normal)
     m_normal = normal.normalized();
 }
 
-void Section::setPlane(const QVector3D &coord, const QVector3D &normal)
+void Section::setPlane(const QVector3D &point, const QVector3D &normal)
 {
-    setCoord(coord);
+    setPoint(point);
     setNormal(normal);
 }
 
@@ -43,54 +51,69 @@ void Section::invert()
     m_normal *= -1;
 }
 
-double Section::computeDistToPoint(const QVector3D &v) const
+Section Section::inverted() const
 {
-    return QVector3D::dotProduct(m_normal, v);
+    Section invertedSection = *this;
+    invertedSection.invert();
+
+    return invertedSection;
 }
 
-int Section::getCount() const
+double Section::computeDistanceToPoint(const QVector3D &point) const
 {
-    return m_data.count();
+    double distance = QVector3D::dotProduct(m_normal, point);
+
+    return distance;
 }
 
-const QVector3D &Section::getFirstVertex() const
+int Section::getVertexCount() const
 {
-    return m_data.first();
-}
-
-const QVector3D &Section::getLastVertex() const
-{
-    return m_data.last();
-}
-
-const QVector3D &Section::getCoord() const
-{
-    return m_coord;
-}
-
-const Normal &Section::getNormal() const
-{
-    return m_normal;
+    return m_vertices.count();
 }
 
 const QVector3D &Section::getVertexAt(int index) const
 {
-    return m_data.at(index);
+    return m_vertices.at(index);
 }
 
-void Section::updateCoord(const QVector3D &coord)
+const QVector3D &Section::getFirstVertex() const
 {
-    QVector3D displacementVec = coord - m_coord;
-    for (int i = 0; i < m_data.count(); i++) {
-        m_data[i] += displacementVec;
+    return m_vertices.first();
+}
+
+const QVector3D &Section::getLastVertex() const
+{
+    return m_vertices.last();
+}
+
+const Edge Section::getEdgeAt(int index) const
+{
+    if (index == m_vertices.count() - 1) {
+        return Edge(m_vertices.first(), m_vertices.last());
+    }
+    else {
+        return Edge(m_vertices.at(index + 1), m_vertices.at(index));
+    }
+}
+
+void Section::updatePoint(const QVector3D &point)
+{
+    QVector3D displacementVec = point - m_point;
+
+    for (int i = 0; i < m_vertices.count(); i++) {
+        m_vertices[i] += displacementVec;
     }
 }
 
 void Section::updateNormal(const Normal &normal)
 {
     QVector3D rotationVec = QVector3D::crossProduct(m_normal, normal);
-    double rotationAngle = Geometry::angleBetween(m_normal, normal);
-    for (int i = 0; i < m_data.count(); i++) {
-        m_data[i] = m_coord + Geometry::rotateVector(m_data[i] - m_coord, rotationAngle, rotationVec);
+    double rotationAngle = Geometry::computeAngleBetween(m_normal, normal);
+
+    QVector3D radiusVec, rotatedVec;
+    for (int i = 0; i < m_vertices.count(); i++) {
+        radiusVec = m_vertices[i] - m_point;
+        rotatedVec = Geometry::rotateVector(radiusVec, rotationAngle, rotationVec);
+        m_vertices[i] = m_point + rotatedVec;
     }
 }

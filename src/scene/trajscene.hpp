@@ -10,8 +10,6 @@
 
 #include <QMouseEvent>
 
-#include <QDebug>
-
 #include "camera.hpp"
 #include "trajbuffer.hpp"
 

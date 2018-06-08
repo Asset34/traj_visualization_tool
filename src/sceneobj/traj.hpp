@@ -21,9 +21,10 @@ public:
 
     int getVertexCount() const;
     int getVertexCount(double time) const;
-    int getOpenglDataCount() const;
-    int getOpenglDataCount(double time) const;
-    int getSegmentsCount() const;
+    int getSegmentCount() const;
+
+    int getBufferSize() const;
+    int getBufferSize(double time) const;
 
     double getBeginTime() const;
     double getEndTime() const;
@@ -34,16 +35,17 @@ public:
 
     QColor getColor() const;
     void setColor(const QColor &color);
-    const Color &getColorVec() const;
-    const Color &getBottomColor() const;
-    const Color &getTopCollor() const;
+    const Color &getColorVec() const;  
+    const Color &getColorBelowTimeBorder() const;
+    const Color &getColorAboveTimeBorder() const;
 
     const QVector3D &getBarycenter() const;
 
     const QVector3D &getInitials() const;
+    QString getStringInitials() const;
 
     int getTimeBorder() const;
-    void setTimeBorder(int time);
+    void setTimeBorder(double time);
     void setTimeBorderAtSegment(int index);
 
     bool isDisplayed() const;
@@ -51,47 +53,51 @@ public:
     bool isCollisionMapped() const;
     void setCollisionMapped(bool status);
 
-    const TrajSegment &getSegmentAt(int index) const;
+    const GLfloat *getBufferData() const;
 
-    const GLfloat *getConstData() const;
+    static bool detectSegmentCollision(const Traj &t1, const Traj &t2, int segmentIndex);
 
 private:
     QString m_name;
+    Section m_section;
     QVector3D m_barycenter;
-    int m_timeBorder;
 
     /* Time attributes */
     double m_timeBegin;
     double m_timeEnd;
     int m_valPerSec;
 
+    double m_timeBorder;
+
     /* Color attributes */
     Color m_color;
-    Color m_collisionColor;
-    Color m_notcollisionCollor;
+    Color m_belowColor;
+    Color m_aboveColor;
 
     /* Flags */
     bool m_isDisplayed;
     bool m_isCollisionMapped;
 
     /* Data */
-    Section m_section;
-    QVector<QVector3D> m_trajData;
+    QVector<QVector3D> m_trajVertices;
     QList<TrajSegment> m_segments;
-    QVector<GLfloat> m_data;
+    QVector<GLfloat> m_bufferData;
 
-    void setData();
-    void setBarycenter();
+    void addTimeAttributes(QTextStream &stream);
+    void addTrajVertices(QTextStream &stream);
+
+    void computeBufferData();
+    void computeBarycenter();
 };
 
 namespace TrajUtills {
 
-double compGeneralBeginTime(const QList<Traj*> &trajs);
-double compGeneralEndTime(const QList<Traj*> &trajs);
-double compGeneralTimeStep(const QList<Traj*> &trajs);
+double computeGeneralBeginTime(const QList<Traj*> &trajs);
+double computeGeneralEndTime(const QList<Traj*> &trajs);
+double computeGeneralTimeStep(const QList<Traj*> &trajs);
 
 // Note: Only for trajectories with the same time attributes
-int compGeneralCollisionTimeBorder(const QList<Traj*> &trajs);
+int computeCollisionSegmentIndex(const QList<Traj*> &trajs);
 
 } // TrajUtills
 

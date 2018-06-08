@@ -12,10 +12,10 @@
 class Face
 {
 public:
-    Face(const QVector3D &rightTop,
-         const QVector3D &leftTop,
-         const QVector3D &leftBottom,
-         const QVector3D &rightBottom);
+    Face(const QVector3D &rightTop    = {0.0, 0.0, 0.0},
+         const QVector3D &leftTop     = {0.0, 0.0, 0.0},
+         const QVector3D &leftBottom  = {0.0, 0.0, 0.0},
+         const QVector3D &rightBottom = {0.0, 0.0, 0.0});
 
     const QVector3D &getRightTop() const;
     const QVector3D &getLeftTop() const;
@@ -29,12 +29,11 @@ public:
     Edge getTopEdge() const;
     Edge getBottomEdge() const;
 
-    void setOpenglData(QVector<GLfloat> &data);
+    double computeDistanceTo(const QVector3D &vec) const;
 
-    double compDistTo(const QVector3D &v) const;
-    bool isLookAt(const QVector3D &v) const;
+    void appendToBuffer(QVector<GLfloat> &buffer);
 
-    static int getOpenglDataCount();
+    static int getBufferSize();
 
 private:
     QVector3D m_rightTop;
@@ -44,7 +43,7 @@ private:
 
     Normal m_normal;
 
-    void setOpenglVertex(QVector<GLfloat> &data, const QVector3D &v);
+    void appendVertexToBuffer(QVector<GLfloat> &buffer, const QVector3D &vec);
 };
 
 #endif // FACE_HPP

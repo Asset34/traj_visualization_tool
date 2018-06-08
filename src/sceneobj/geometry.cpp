@@ -2,12 +2,13 @@
 
 namespace Geometry {
 
-double angleBetween(const QVector3D &vec1, const QVector3D &vec2)
+double computeAngleBetween(const QVector3D &vec1, const QVector3D &vec2)
 {
     double dotProduct = QVector3D::dotProduct(vec1, vec2);
-    double angle = qRadiansToDegrees(qAcos(dotProduct / (vec1.length() * vec2.length())));
+    double radianAngle = qAcos(dotProduct / (vec1.length() * vec2.length()));
+    double degreeAngle = qRadiansToDegrees(radianAngle);
 
-    return angle;
+    return degreeAngle;
 }
 
 QVector3D rotateVector(const QVector3D &vec, double angle, const QVector3D &rotationVec)

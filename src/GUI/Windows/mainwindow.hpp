@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include <QWidget>
+#include <QScrollArea>
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -30,6 +31,9 @@ private:
     TrajPanel *m_trajPanel;
     ScenePanel *m_scenePanel;
     LightPanel *m_lightPanel;
+
+    QWidget *m_panelScrollWidget;
+    QScrollArea *m_panelScrollArea;
 };
 
 #endif // MAINWINDOW_HPP

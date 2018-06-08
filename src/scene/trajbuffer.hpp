@@ -19,15 +19,15 @@ public:
     void release();
 
     const Color &getColor() const;
-    const Color &getBottomColor() const;
-    const Color &getTopColor() const;
+    const Color &getBelowColor() const;
+    const Color &getAboveColor() const;
 
     int getTimeBorder() const;
 
     int getVertexCount(double time) const;
 
-    bool getDisplayStatus() const;
-    bool getSeparationStatus() const;
+    bool isDisplayed() const;
+    bool isSeparated() const;
 
 private:
     Traj *m_traj;

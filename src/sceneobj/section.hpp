@@ -1,11 +1,10 @@
 #ifndef SECTION_HPP
 #define SECTION_HPP
 
-#include <QList>
-
 #include <QTextStream>
 
-#include <QVector2D>
+#include <QList>
+
 #include <QVector3D>
 
 #include "geometry.hpp"
@@ -14,33 +13,36 @@ class Section
 {
 public:
     explicit Section(QTextStream &stream,
-                     const QVector3D &coord = {0.0, 0.0, 0.0},
+                     const QVector3D &point = {0.0, 0.0, 0.0},
                      const QVector3D &normal = {0.0, 0.0, 1.0});
 
-    int getCount() const;
+    int getVertexCount() const;
 
+    const QVector3D &getVertexAt(int index) const;
     const QVector3D &getFirstVertex() const;
     const QVector3D &getLastVertex() const;
 
-    const QVector3D &getCoord() const;
+    const Edge getEdgeAt(int index) const;
+
+    const QVector3D &getPoint() const;
+    void setPoint(const QVector3D &point);
+
     const Normal &getNormal() const;
-
-    const QVector3D &getVertexAt(int index) const;
-
-    void setCoord(const QVector3D &coord);
     void setNormal(const QVector3D &normal);
-    void setPlane(const QVector3D &coord, const QVector3D &normal);
+
+    void setPlane(const QVector3D &point, const QVector3D &normal);
 
     void invert();
+    Section inverted() const;
 
-    double computeDistToPoint(const QVector3D &v) const;
+    double computeDistanceToPoint(const QVector3D &point) const;
 
 private:
-    QVector3D m_coord;
+    QVector3D m_point;
     Normal m_normal;
-    QList<QVector3D> m_data;
+    QVector<QVector3D> m_vertices;
 
-    void updateCoord(const QVector3D &coord);
+    void updatePoint(const QVector3D &point);
     void updateNormal(const Normal &normal);
 };
 

@@ -1,7 +1,5 @@
 #include "trajcontrolpanel.hpp"
 
-#include <QDebug>
-
 TrajControlPanel::TrajControlPanel(QWidget *parent)
     : QGroupBox(parent)
 {
@@ -32,17 +30,11 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     m_focusButton->setFixedWidth(60);
     m_focusButton->setEnabled(false);
 
-    /* Configurate show collision button */
-    m_showCollisionButton = new QPushButton("Show\nCollision");
-    m_showCollisionButton->setFixedHeight(40);
-    m_showCollisionButton->setFixedWidth(60);
-    m_showCollisionButton->setEnabled(false);
-
-    /* Configurate show collision button */
-    m_hideCollisionButton = new QPushButton("Hide\nCollision");
-    m_hideCollisionButton->setFixedHeight(40);
-    m_hideCollisionButton->setFixedWidth(60);
-    m_hideCollisionButton->setEnabled(false);
+    /* Configurate collision button */
+    m_collisionButton = new QPushButton("Compute\ncollision");
+    m_collisionButton->setFixedHeight(40);
+    m_collisionButton->setFixedWidth(60);
+    m_collisionButton->setEnabled(false);
 
     /* Configurate buttons layout */
     m_buttonsLayout = new QVBoxLayout;
@@ -51,8 +43,7 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     m_buttonsLayout->addWidget(m_deleteButton);
     m_buttonsLayout->addWidget(m_selectButton);
     m_buttonsLayout->addWidget(m_focusButton);
-    m_buttonsLayout->addWidget(m_showCollisionButton);
-    m_buttonsLayout->addWidget(m_hideCollisionButton);
+    m_buttonsLayout->addWidget(m_collisionButton);
     m_buttonsLayout->addStretch(1);
 
     /* Configurate main layout */
@@ -67,175 +58,245 @@ TrajControlPanel::TrajControlPanel(QWidget *parent)
     setFixedWidth(200);
     setLayout(m_mainLayout);
 
+    m_isCollisionMode = false;;
+    m_isCollisionComputed = false;
+
     /* Configurate connections */
     connect(m_addButton, &QPushButton::clicked, this, &TrajControlPanel::addTraj);
     connect(m_deleteButton, &QPushButton::clicked, this, &TrajControlPanel::deleteTraj);
     connect(m_selectButton, &QPushButton::clicked, this, &TrajControlPanel::selectTraj);
     connect(m_focusButton, &QPushButton::clicked, this, &TrajControlPanel::focusTraj);
+    connect(m_collisionButton, &QPushButton::clicked, this, &TrajControlPanel::collision);
     connect(m_trajList, &QListWidget::itemChanged, this, &TrajControlPanel::setTrajDisplay);
     connect(m_trajList, &QListWidget::itemDoubleClicked, this, &TrajControlPanel::selectTraj);
-    connect(m_showCollisionButton, &QPushButton::clicked, this, &TrajControlPanel::showCollision);
-    connect(m_hideCollisionButton, &QPushButton::clicked, this, &TrajControlPanel::hideCollision);
 }
 
 void TrajControlPanel::updateGeneralTimeValues()
 {
     /* Update general begin time */
-    double generalBegin = TrajUtills::compGeneralBeginTime(m_trajs);
+    double generalBegin = TrajUtills::computeGeneralBeginTime(m_trajs);
     emit generalBeginTimeChanged(generalBegin);
 
     /* Update general end time */
-    double generalEnd = TrajUtills::compGeneralEndTime(m_trajs);
+    double generalEnd = TrajUtills::computeGeneralEndTime(m_trajs);
     emit generalEndTimeChanged(generalEnd);
 
     /* Update general time step */
-    double generalStep = TrajUtills::compGeneralTimeStep(m_trajs);
+    double generalStep = TrajUtills::computeGeneralTimeStep(m_trajs);
     emit generalTimeStepChanged(generalStep);
 }
 
-bool TrajControlPanel::checkIndex(int index) const
+bool TrajControlPanel::isCorrectIndex(int index) const
 {
-    return index >= 0 && index < m_trajList->count();
+    return index >=0 && index < m_trajList->count();
 }
 
-bool TrajControlPanel::checkFirst() const
+bool TrajControlPanel::isOneTraj() const
 {
-    return m_trajs.count() == 1;
+    return m_trajList->count() == 1;
 }
 
-bool TrajControlPanel::checkLast() const
+bool TrajControlPanel::isNoneTraj() const
 {
     return m_trajs.empty();
 }
 
-QString TrajControlPanel::createTrajName(Traj *traj) const
+void TrajControlPanel::setTraj(Traj *traj)
 {
-    QString name = traj->getName();
+    /* Create name */
+    QString name = createTrajListName(traj);
 
-    QVector3D initials = traj->getInitials();
-    name.append(" (" + QString::number(initials.x()) + ", ");
-    name.append(QString::number(initials.y()) + ", ");
-    name.append(QString::number(initials.z()) + ")");
+    /* Set into list widget */
+    QListWidgetItem *item = new QListWidgetItem(name, m_trajList);
+    item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+    item->setCheckState(Qt::Checked);
 
-    return name;
+    /* Notify */
+    emit trajAdded(traj);
+    if (isOneTraj()) {
+        emit firstTrajWasAdded();
+        emit trajFocused(traj);
+    }
+
+    /* Update */
+    if (isOneTraj()) {
+        enableControls();
+        updateGeneralTimeValues();
+    }
+    m_isCollisionComputed = false;
+    m_collisionButton->setText("Compute\ncollision");
 }
+
+void TrajControlPanel::unsetTraj(int index)
+{
+    /* Unset from traj list */
+    m_trajList->takeItem(index);
+
+    /* Notify */
+    emit trajDeleted(index);
+    if (isNoneTraj()) {
+        emit lastTrajWasDeleted();
+    }
+
+    /* Update */
+    if (isNoneTraj()) {
+        disableControls();
+    }
+    else {
+        updateGeneralTimeValues();
+    }
+    m_isCollisionComputed = false;
+    m_collisionButton->setText("Compute\ncollision");
+}
+
+#include <QDebug>
 
 void TrajControlPanel::addTraj()
 {
-    AddTrajWindow *w = new AddTrajWindow(this);
-    w->exec();
+    try {
+        /* Open subwindow */
+        AddTrajWindow *w = new AddTrajWindow(this);
+        w->exec();
 
-    if (w->result() == QDialog::Accepted) {
-        /* Load traj */
-        Traj *traj = w->getTraj();
+        /* Handle */
+        if (w->result() == QDialog::Accepted) {
+            Traj *traj = w->getTraj();
 
-        /* Add traj */
-        m_trajs.push_back(traj);
-
-        hideCollision();
-
-        /* Add traj to list widget */
-        QListWidgetItem *item = new QListWidgetItem(createTrajName(traj), m_trajList);
-        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-        item->setCheckState(Qt::Checked);
-
-        /* Notify about current state */
-        if (checkFirst()) {
-            emit firstTrajWasAdded(traj);
-            emit trajFocused(traj);
-
-            // Update widgets
-            m_deleteButton->setEnabled(true);
-            m_selectButton->setEnabled(true);
-            m_focusButton->setEnabled(true);
-            m_showCollisionButton->setEnabled(true);
+            m_trajs.push_back(traj);
+            setTraj(traj);
         }
-        updateGeneralTimeValues();
-
-        emit trajAdded(traj);
+    }
+    catch (std::exception &e) {
+        QMessageBox box;
+        box.setText("Incorrect data");
+        box.exec();
     }
 }
 
 void TrajControlPanel::deleteTraj()
 {
-    int row = m_trajList->currentRow();
-    if (checkIndex(row)) {
-        /* Delete traj */
-        m_trajs.removeAt(row);
+    /* Get index */
+    int index = m_trajList->currentRow();
 
-        /* Delete from the list widget */
-        m_trajList->takeItem(row);
+    /* Handle */
+    if (isCorrectIndex(index)) {
+        m_trajs.removeAt(index);
 
-        hideCollision();
-
-        /* Notify about current state */
-        if (checkLast()) {
-            emit allTrajWasDeleted();
-
-            /* Update widgets */
-            m_deleteButton->setEnabled(false);
-            m_selectButton->setEnabled(false);
-            m_focusButton->setEnabled(false);
-            m_showCollisionButton->setEnabled(false);
-            m_hideCollisionButton->setEnabled(false);
-        }
-        else {
-            updateGeneralTimeValues();
-        }
-
-        emit trajDeleted(row);
+        unsetTraj(index);
     }
 }
 
 void TrajControlPanel::selectTraj()
 {
-    int row = m_trajList->currentRow();
-    if (checkIndex(row)) {
-        emit trajSelected(m_trajs.at(row));
+    /* Get index */
+    int index = m_trajList->currentRow();
+
+    /* Handle */
+    if (isCorrectIndex(index)) {
+        emit trajSelected(m_trajs[index]);
     }
 }
 
 void TrajControlPanel::focusTraj()
 {
-    int row = m_trajList->currentRow();
-    if (checkIndex(row)) {
-        emit trajFocused(m_trajs.at(row));
+    /* Get index */
+    int index = m_trajList->currentRow();
+
+    /* Handle */
+    if (isCorrectIndex(index)) {
+        emit trajFocused(m_trajs[index]);
     }
 }
 
 void TrajControlPanel::setTrajDisplay(QListWidgetItem *item)
 {
-    int row = m_trajList->row(item);
+    /* Get index */
+    int index = m_trajList->row(item);
+
+    /* Get display status */
     Qt::CheckState status = item->checkState();
 
-    m_trajs.at(row)->setDisplayed(status);
+    m_trajs.at(index)->setDisplayed(status);
+
+    /* Notify */
     emit trajUpdated();
 }
 
-void TrajControlPanel::showCollision()
+void TrajControlPanel::collision()
 {
-    /* Update traj */
-    int borderSegmentIndex = TrajUtills::compGeneralCollisionTimeBorder(m_trajs);
+    if (m_isCollisionMode) {
+        hideTrajCollision();
+    }
+    else {
+        if (!m_isCollisionComputed) {
+            computeTrajCollision();
+        }
+
+        showTrajCollision();
+    }
+}
+
+void TrajControlPanel::disableControls()
+{
+    m_deleteButton->setEnabled(false);
+    m_selectButton->setEnabled(false);
+    m_focusButton->setEnabled(false);
+    m_collisionButton->setEnabled(false);
+}
+
+void TrajControlPanel::enableControls()
+{
+    m_deleteButton->setEnabled(true);
+    m_selectButton->setEnabled(true);
+    m_focusButton->setEnabled(true);
+    m_collisionButton->setEnabled(true);
+}
+
+void TrajControlPanel::setTrajSeparated(bool status)
+{
+    for (int i = 0; i < m_trajs.count(); i++) {
+        m_trajs[i]->setCollisionMapped(status);
+    }
+}
+
+void TrajControlPanel::computeTrajCollision()
+{
+    /* Compute segment index of the collision border */
+    int borderSegmentIndex = TrajUtills::computeCollisionSegmentIndex(m_trajs);
+
+    /* Set border for each trajectory */
     for (int i = 0; i < m_trajs.count(); i++) {
         m_trajs[i]->setTimeBorderAtSegment(borderSegmentIndex);
-        m_trajs[i]->setCollisionMapped(true);
     }
-    emit trajUpdated();
 
-    /* Update widgets */
-    m_showCollisionButton->setEnabled(false);
-    m_hideCollisionButton->setEnabled(true);
+    /* Update flags */
+    m_isCollisionComputed = true;
 }
 
-void TrajControlPanel::hideCollision()
+void TrajControlPanel::showTrajCollision()
 {
-    /* Update trajectories */
-    for (int i = 0; i < m_trajs.count(); i++) {
-        m_trajs[i]->setCollisionMapped(false);
-    }
-    emit trajUpdated();
+    setTrajSeparated(true);
 
-    /* Update widgets */
-    m_showCollisionButton->setEnabled(true);
-    m_hideCollisionButton->setEnabled(false);
+    m_isCollisionMode = true;
+    m_collisionButton->setText("Hide\ncollision");
+
+    emit trajUpdated();
+}
+
+void TrajControlPanel::hideTrajCollision()
+{
+    setTrajSeparated(false);
+
+    m_isCollisionMode = false;
+    m_collisionButton->setText("Show\ncollision");
+
+    emit trajUpdated();
+}
+
+QString TrajControlPanel::createTrajListName(Traj *traj) const
+{
+    QString name = traj->getName();
+    QString initials = traj->getStringInitials();
+
+    return name + initials;
 }

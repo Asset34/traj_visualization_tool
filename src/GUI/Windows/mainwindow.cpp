@@ -11,7 +11,6 @@ MainWindow::MainWindow(QWidget *parent)
     /* Configurate scene */
     m_scene = new TrajScene;
     m_scene->setLightColor(Qt::white);
-//    m_scene->setLightAmbientStrength(0.1);
     m_scene->setLightSourcePosition({0.0, 0.0, 1.0});
 
     /* Configurate time box */
@@ -45,17 +44,28 @@ MainWindow::MainWindow(QWidget *parent)
     m_panelLayout->addWidget(m_scenePanel);
     m_panelLayout->addWidget(m_lightPanel);
 
+    /* Configurate panel scroll widget */
+    m_panelScrollWidget = new QWidget;
+    m_panelScrollWidget->setLayout(m_panelLayout);
+
+    /* Configurate panel scroll area */
+    m_panelScrollArea = new QScrollArea;
+    m_panelScrollArea->setWidget(m_panelScrollWidget);
+    m_panelScrollArea->setWidgetResizable(false);
+    m_panelScrollArea->setFrameShape(QFrame::NoFrame);
+    m_panelScrollArea->setFixedWidth(220);
+
     /* Configurate main layout */
     m_mainLayout = new QHBoxLayout;
     m_mainLayout->setMargin(0);
     m_mainLayout->addLayout(m_sceneLayout);
-    m_mainLayout->addLayout(m_panelLayout);
+    m_mainLayout->addWidget(m_panelScrollArea);
 
     /* Configure window */
-    setWindowTitle("Attractor Visualizer");
+    setWindowTitle("Visualization tool");
     setContentsMargins(5, 15, 5, 5);
     setLayout(m_mainLayout);
-    resize(1000, 400);
+    resize(1000, 600);
 
     /* Set connections */
     connect(m_trajControlPanel, &TrajControlPanel::trajAdded, m_scene, &TrajScene::addTraj);
@@ -67,11 +77,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_trajControlPanel, &TrajControlPanel::generalEndTimeChanged, m_timeBox, &DoubleValueSlideBox::setValue);
     connect(m_trajControlPanel, &TrajControlPanel::generalTimeStepChanged, m_timeBox, &DoubleValueSlideBox::setStep);
     connect(m_trajControlPanel, &TrajControlPanel::firstTrajWasAdded, m_timeBox, &DoubleValueSlideBox::enable);
-    connect(m_trajControlPanel, &TrajControlPanel::allTrajWasDeleted, m_timeBox, &DoubleValueSlideBox::disable);
+    connect(m_trajControlPanel, &TrajControlPanel::lastTrajWasDeleted, m_timeBox, &DoubleValueSlideBox::disable);
     connect(m_trajControlPanel, &TrajControlPanel::trajSelected, m_trajPanel, &TrajPanel::setTraj);
-    connect(m_trajControlPanel, &TrajControlPanel::firstTrajWasAdded, m_trajPanel, &TrajPanel::setTraj);
     connect(m_trajControlPanel, &TrajControlPanel::firstTrajWasAdded, m_trajPanel, &TrajPanel::enable);
-    connect(m_trajControlPanel, &TrajControlPanel::allTrajWasDeleted, m_trajPanel, &TrajPanel::disable);
+    connect(m_trajControlPanel, &TrajControlPanel::lastTrajWasDeleted, m_trajPanel, &TrajPanel::disable);
     connect(m_trajPanel, &TrajPanel::trajUpdated, m_scene, static_cast<void (TrajScene::*)()>(&TrajScene::update));
     connect(m_timeBox, &DoubleValueSlideBox::valueChanged, m_scene, &TrajScene::setCurrentTime);
     connect(m_scenePanel, &ScenePanel::backgroundColorChanged, m_scene, &TrajScene::setBackgroundColor);

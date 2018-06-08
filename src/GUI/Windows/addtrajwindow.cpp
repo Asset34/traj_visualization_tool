@@ -56,21 +56,31 @@ AddTrajWindow::AddTrajWindow(QWidget *parent)
 
 Traj *AddTrajWindow::getTraj() const
 {
+    bool isOppened;
+
     /* Load section */
+
     QFile file1(m_pathSectionBox->getPath());
-    file1.open(QFile::ReadOnly);
+
+    isOppened = file1.open(QFile::ReadOnly);
+    if (!isOppened) {
+        throw std::logic_error("");
+    }
+
     QTextStream stream1(&file1);
     Section section(stream1);
 
     /* Load trajectory */
+
     QFile file2(m_pathBox->getPath());
-    file2.open(QFile::ReadOnly);
+
+    isOppened = file2.open(QFile::ReadOnly);
+    if (!isOppened) {
+        throw std::logic_error("");
+    }
+
     QTextStream stream2(&file2);
     Traj *traj = new Traj(m_nameBox->getText(), stream2, section);
-
-    /* Set default trajectory parameters */
-    traj->setDisplayed(true);
-    traj->setColor(Qt::white);
 
     return traj;
 }

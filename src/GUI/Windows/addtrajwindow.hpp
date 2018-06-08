@@ -10,6 +10,8 @@
 #include <QLabel>
 #include <QPushButton>
 
+#include <exception>
+
 #include "../boxes/openfilebox.hpp"
 #include "../boxes/textinputbox.hpp"
 #include "../../sceneobj/traj.hpp"
@@ -32,6 +34,7 @@ private:
     OpenFileBox *m_pathSectionBox;
     QPushButton *m_okButton;
     QPushButton *m_cancelButton;
+
 };
 
 #endif // TRAJWINDOW_HPP

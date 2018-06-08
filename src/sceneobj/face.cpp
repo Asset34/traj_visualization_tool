@@ -9,8 +9,9 @@ Face::Face(const QVector3D &rightTop,
       m_leftBottom(leftBottom),
       m_rightBottom(rightBottom)
 {
-    m_normal = QVector3D::crossProduct(m_rightTop - m_rightBottom,
-                                       m_leftBottom - m_rightBottom);
+    QVector3D vec1 = m_leftTop - m_rightTop;
+    QVector3D vec2 = m_rightBottom - m_rightTop;
+    m_normal = QVector3D::crossProduct(vec1, vec2);
 }
 
 const QVector3D &Face::getRightTop() const
@@ -58,39 +59,35 @@ Edge Face::getBottomEdge() const
     return Edge(m_rightBottom, m_leftBottom);
 }
 
-int Face::getOpenglDataCount()
+double Face::computeDistanceTo(const QVector3D &vec) const
+{
+    double distance = QVector3D::dotProduct(m_normal, vec);
+
+    return distance;
+}
+
+void Face::appendToBuffer(QVector<GLfloat> &buffer)
+{
+    appendVertexToBuffer(buffer, m_rightTop);
+    appendVertexToBuffer(buffer, m_leftTop);
+    appendVertexToBuffer(buffer, m_leftBottom);
+    appendVertexToBuffer(buffer, m_rightBottom);
+}
+
+int Face::getBufferSize()
 {
     return 24;
 }
 
-void Face::setOpenglData(QVector<GLfloat> &data)
-{
-    setOpenglVertex(data, m_rightTop);
-    setOpenglVertex(data, m_leftTop);
-    setOpenglVertex(data, m_leftBottom);
-    setOpenglVertex(data, m_rightBottom);
-}
-
-double Face::compDistTo(const QVector3D &v) const
-{
-    return QVector3D::dotProduct(m_normal, v);
-}
-
-bool Face::isLookAt(const QVector3D &v) const
-{
-    return compDistTo(v) > 0;
-}
-
-void Face::setOpenglVertex(QVector<GLfloat> &data, const QVector3D &v)
+void Face::appendVertexToBuffer(QVector<GLfloat> &buffer, const QVector3D &vec)
 {
     // Add vertex
-    data.push_back(v.x());
-    data.push_back(v.y());
-    data.push_back(v.z());
+    buffer.push_back(vec.x());
+    buffer.push_back(vec.y());
+    buffer.push_back(vec.z());
 
     // Add normal
-    Normal norm = QVector3D::crossProduct(m_leftTop - m_rightTop, m_rightBottom - m_rightTop);
-    data.push_back(norm.x());
-    data.push_back(norm.y());
-    data.push_back(norm.z());
+    buffer.push_back(m_normal.x());
+    buffer.push_back(m_normal.y());
+    buffer.push_back(m_normal.z());
 }

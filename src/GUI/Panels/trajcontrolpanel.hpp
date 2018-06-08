@@ -8,7 +8,11 @@
 #include <QListWidget>
 #include <QPushButton>
 
+#include <QMessageBox>
+
 #include <QVector3D>
+
+#include "stdexcept"
 
 #include "../windows/addtrajwindow.hpp"
 #include "../../sceneobj//traj.hpp"
@@ -28,8 +32,7 @@ private:
     QPushButton *m_deleteButton;
     QPushButton *m_selectButton;
     QPushButton *m_focusButton;
-    QPushButton *m_showCollisionButton;
-    QPushButton *m_hideCollisionButton;
+    QPushButton *m_collisionButton;
 
     QList<Traj*> m_trajs;
 
@@ -37,13 +40,28 @@ private:
     double m_maxEndTime;
     double m_minTimeStep;
 
+    bool m_isCollisionMode;
+    bool m_isCollisionComputed;
+
     void updateGeneralTimeValues();
 
-    bool checkIndex(int index) const;
-    bool checkFirst() const;
-    bool checkLast() const;
+    bool isCorrectIndex(int index) const;
+    bool isOneTraj() const;
+    bool isNoneTraj() const;
 
-    QString createTrajName(Traj *traj) const;
+    void setTraj(Traj *traj);
+    void unsetTraj(int index);
+
+    void disableControls();
+    void enableControls();
+
+    void setTrajSeparated(bool status);
+
+    void computeTrajCollision();
+    void showTrajCollision();
+    void hideTrajCollision();
+
+    QString createTrajListName(Traj *traj) const;
 
 private slots:
     void addTraj();
@@ -51,20 +69,22 @@ private slots:
     void selectTraj();
     void focusTraj();
     void setTrajDisplay(QListWidgetItem *item);
-    void showCollision();
-    void hideCollision();
+
+    void collision();
 
 signals:
-    void trajAdded(Traj *ptraj);
+    void trajAdded(Traj *traj);
     void trajDeleted(int pos);
     void trajFocused(Traj *traj);
     void trajSelected(Traj *traj);
     void trajUpdated();
+
     void generalBeginTimeChanged(double time);
     void generalEndTimeChanged(double time);
     void generalTimeStepChanged(double step);
-    void firstTrajWasAdded(Traj *traj);
-    void allTrajWasDeleted();
+
+    void firstTrajWasAdded();
+    void lastTrajWasDeleted();
 };
 
 #endif // TRAJCONTROLPANEL_HPP

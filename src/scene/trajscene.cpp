@@ -133,28 +133,36 @@ void TrajScene::paintGL()
         m_shprogram.setUniformValue(m_viewPosLoc, m_camera.getPosition());
 
         for (int i = 0; i < m_buffers.count(); i++) {
-            if (m_buffers[i]->getDisplayStatus()) {
+            if (m_buffers[i]->isDisplayed()) {
                 m_buffers[i]->bind();
-                if(m_buffers[i]->getSeparationStatus()) {
-                    int timeBorder = m_buffers[i]->getTimeBorder();
-                    if (m_currentTime < timeBorder) {
-                        m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getBottomColor());
-                        glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
+
+                    if (m_buffers[i]->isSeparated()) {
+                        double timeBorder = m_buffers[i]->getTimeBorder();
+
+                        if (m_currentTime < timeBorder) {
+                            m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getBelowColor());
+                            glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
+                        }
+                        else {
+                            // Draw below part
+
+                            m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getBelowColor());
+                            glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(timeBorder));
+
+                            // Draw above aprt
+
+                            int start = m_buffers[i]->getVertexCount(timeBorder);
+                            int length = m_buffers[i]->getVertexCount(m_currentTime) - start;
+
+                            m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getAboveColor());
+                            glDrawArrays(GL_QUADS, start, length);
+                        }
                     }
                     else {
-                        m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getBottomColor());
-                        glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(timeBorder));
-
-                        m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getTopColor());
-                        int start = m_buffers[i]->getVertexCount(timeBorder);
-                        int length = m_buffers[i]->getVertexCount(m_currentTime) - start;
-                        glDrawArrays(GL_QUADS, start, length);
+                        m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getColor());
+                        glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
                     }
-                }
-                else {
-                    m_shprogram.setUniformValue(m_objectColorLoc, m_buffers[i]->getColor());
-                    glDrawArrays(GL_QUADS, 0, m_buffers[i]->getVertexCount(m_currentTime));
-                }
+
                 m_buffers[i]->release();
             }
         }
